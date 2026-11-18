@@ -61,7 +61,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .pp .r{width:100%;border:0;background:none;font:inherit;font-size:13px;cursor:pointer;text-align:left;color:inherit}
 .pp .r:hover{background:var(--bg)}.pp .r.on{background:#e8efff;font-weight:700}.pp .r.off{color:#9aa7b8;cursor:default}
 .pp .hint{font-size:11px;color:var(--muted);margin:8px 0 2px}
-.ch{margin-top:2px}.ch svg{width:100%;height:auto;display:block}.ch .cap{font-size:12px;color:var(--ink);margin-top:2px}
+.ch{margin-top:2px;min-height:158px}.ch svg{width:100%;height:auto;display:block}.ch .cap{font-size:12px;color:var(--ink);margin-top:2px}
 .empty-ch{font-size:12px;color:var(--muted);padding:18px 0;text-align:center}
 @media(max-width:800px){
  body{grid-template-columns:1fr;grid-template-rows:52vh 1fr}
@@ -125,6 +125,7 @@ function popup(e){
     (note?`<div class="n">${note}</div>`:'')+(e.v?`<div class="v">Precio vigente desde ${f2(e.v)}</div>`:'')+
     `<a href="https://www.google.com/maps/dir/?api=1&destination=${e.la},${e.lo}" target="_blank" rel="noopener">Cómo llegar</a></div>`;
 }
+function popupEl(e){const d=document.createElement('div');d.innerHTML=popup(e);return d.firstElementChild}
 let FIN='',VER='';const histCache={};
 async function hist(id){
   const b=id.slice(0,2);
@@ -132,7 +133,8 @@ async function hist(id){
   return (await histCache[b])[id]||{};
 }
 function chart(s){
-  if(!s||!s.length)return '<div class="empty-ch">Todavía no hay historial para este combustible.</div>';
+  s=(s||[]).map(a=>[String(a[0]).slice(0,10),Number(a[1])]).filter(a=>/^\d{4}-\d\d-\d\d$/.test(a[0])&&a[1]>0).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);
+  if(!s.length)return '<div class="empty-ch">Todavía no hay historial para este combustible.</div>';
   const D=864e5,T=d=>Date.parse(d+'T12:00:00'),W=300,H=120,L=6,R=6,Tp=16,B=20,base=H-B;
   const t0=T(s[0][0]),t1=Math.max(T(FIN||s[s.length-1][0]),T(s[s.length-1][0])),span=Math.max(t1-t0,7*D);
   const X=t=>(L+(t-(t1-span))/span*(W-L-R)).toFixed(1);
@@ -149,14 +151,16 @@ map.on('popupopen',ev=>{
   const root=ev.popup.getElement().querySelector('.pp');if(!root)return;
   const id=root.dataset.id,e=ST.find(x=>x.id===id),box=root.querySelector('.ch');
   const sel=async k=>{root.querySelectorAll('.r[data-k]').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
-    box.innerHTML='<div class="empty-ch">Cargando historial…</div>';const hh=await hist(id);box.innerHTML=chart(hh[k]);ev.popup.update()};
-  root.addEventListener('click',x=>{const b=x.target.closest('.r[data-k]');if(b)sel(b.dataset.k)});
+    box.innerHTML='<div class="empty-ch">Cargando historial…</div>';
+    try{const hh=await hist(id);box.innerHTML=chart(hh[k])}catch(err){box.innerHTML='<div class="empty-ch">No se pudo mostrar el historial ('+esc(err.message)+')</div>';console.error(err)}};
+  root._sel=sel;
+  if(!root.dataset.b){root.dataset.b=1;root.addEventListener('click',x=>{const b=x.target.closest('.r[data-k]');if(b)root._sel(b.dataset.k)})}
   sel(e.n[state.fuel]!=null?state.fuel:Object.keys(e.n)[0]);
 });
 function mk(e){
   const p=e.n[state.fuel];
   const m=L.marker([e.la,e.lo],{price:p,icon:L.divIcon({className:'pinwrap',iconSize:[0,0],html:`<span class="pin s${bucket(p)}${EXACT.has(e.pr)?'':' aprox'}">${money(p)}</span>`})});
-  m.bindPopup(()=>popup(e),{maxWidth:340});markers.set(e.id,m);return m;
+  m.bindPopup(()=>m._pe||(m._pe=popupEl(e)),{maxWidth:340});markers.set(e.id,m);return m;
 }
 function visible(){
   const q=norm(state.q);
