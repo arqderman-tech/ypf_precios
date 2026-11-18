@@ -46,7 +46,7 @@ background:#ffffff14;color:#fff;max-width:300px}
 background:#fff;color:var(--ink);cursor:pointer;text-decoration:none;white-space:nowrap;transition:.18s;display:inline-flex;gap:8px;align-items:center}
 .btn:hover{border-color:#c9d6ee;transform:translateY(-1px);box-shadow:0 6px 18px -8px #0b152440}
 /* ── kpis ───────────────────────────────────────────── */
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px}
 .kpi{padding:18px 20px;border-radius:var(--r);background:#fff;border:1px solid var(--line);box-shadow:var(--sh)}
 .kpi .k{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .kpi .v{font-size:32px;font-weight:800;letter-spacing:-.035em;margin-top:6px;line-height:1}
@@ -116,7 +116,43 @@ background:#f7f9fd;border:1px solid var(--line);cursor:pointer;text-align:left;f
 .credit{margin:22px 0 0;text-align:center;font-size:12px;color:var(--muted)}
 .nodata{padding:70px 0;text-align:center;color:#5b6b80;font-size:13.5px}
 .nodata small{font-size:12px}
+/* ── posición ───────────────────────────────────────── */
+.pos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.pos .pz{padding:15px 17px;border-radius:14px;background:#f7f9fd;border:1px solid var(--line)}
+.pos .pz .k{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pos .pz .big{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-top:6px}
+.pos .pz .big small{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:0}
+.pos .pz .sub{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.45}
+.pos .pz .track{position:relative;height:8px;border-radius:5px;background:linear-gradient(90deg,#0f9d76,#e2b01c,#d6403a);margin-top:11px}
+.pos .pz .track i{position:absolute;top:-3.5px;width:5px;height:15px;border-radius:3px;background:#0b1524;box-shadow:0 0 0 3px #fff}
+.pos .pz .ends{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:6px}
+/* ── comparador ─────────────────────────────────────── */
+.cmp{display:grid;grid-template-columns:1fr 302px;gap:18px;margin-top:22px;align-items:start}
+.cmp h2{margin:0;font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+.cmp .h2sub{font-size:12px;color:var(--muted);margin-top:3px}
+.ser{display:grid;gap:6px}
+.ser .s{display:grid;grid-template-columns:12px 1fr auto auto;gap:9px;align-items:center;padding:9px 11px;
+border-radius:11px;background:#f9fbfe;border:1px solid var(--line);font-size:12.5px}
+.ser .s .sw{width:11px;height:11px;border-radius:4px}
+.ser .s .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ser .s .pc{font-weight:800}
+.ser .s .x{border:0;background:none;color:#9aa7b8;cursor:pointer;font-size:13px;line-height:1;padding:2px 3px;border-radius:6px}
+.ser .s .x:hover{color:var(--up);background:#fdecea}
+.cmp select{width:100%;font:inherit;font-size:13px;font-weight:600;padding:9px 11px;border-radius:11px;
+border:1px solid var(--line);background:#fff;color:var(--ink);margin-top:10px}
+/* ── costo de tanque ────────────────────────────────── */
+.tank{margin-top:24px;border-top:1px dashed var(--line);padding-top:20px}
+.tank input[type=range]{width:100%;accent-color:var(--brand);margin:4px 0 0}
+.tank .lit{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:4px}
+.tank .lit span:last-child{font-weight:600;color:var(--muted);font-size:12.5px}
+.tank .res{margin-top:14px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tank .rr{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;padding:11px 13px;
+border-radius:12px;background:#f7f9fd;border:1px solid var(--line)}
+.tank .rr b{font-weight:800;white-space:nowrap}
+.tank .rr.win{background:linear-gradient(100deg,#eafaf4,#f7f9fd);border-color:#c7ecdf}
 @media(max-width:960px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.foot{grid-template-columns:1fr 1fr}
+.pos,.cmp{grid-template-columns:1fr}.tank .res{grid-template-columns:1fr}
 .hero{grid-template-columns:1fr}.hero .btns{flex-direction:row;align-items:flex-start;flex-wrap:wrap}.top{flex-wrap:wrap}
 .pick select{max-width:210px}.pick input{width:130px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -152,8 +188,10 @@ background:#f7f9fd;border:1px solid var(--line);cursor:pointer;text-align:left;f
       <div class="v" id="kprice">—</div><div class="d" id="kvig">—</div></div>
     <div class="kpi"><div class="k">Variación <span id="kf2">30 días</span></div>
       <div class="v" id="kvar">—</div><div class="d" id="kvarsub">—</div></div>
-    <div class="kpi"><div class="k">Posición vs país</div>
+    <div class="kpi"><div class="k">Puesto en el país</div>
       <div class="v" id="kpos">—</div><div class="d" id="kpossub">—</div></div>
+    <div class="kpi"><div class="k">Facturación estimada · mes</div>
+      <div class="v" id="kfac">—</div><div class="d" id="kfacsub">—</div></div>
   </div>
 
   <div class="segwrap">
@@ -181,6 +219,68 @@ background:#f7f9fd;border:1px solid var(--line);cursor:pointer;text-align:left;f
       <div class="notes">Se calcula con el <b>precio vigente</b> al inicio de cada período y el de hoy. Los períodos sin datos previos suficientes quedan en “sin datos”.</div>
     </aside>
   </div>
+
+  <section class="card panel" style="margin-top:16px" id="mercado">
+    <div class="ph"><div class="sp">
+      <h2>Dónde estás parado</h2>
+      <div class="h2sub" id="possub">—</div>
+    </div></div>
+    <div class="pos" id="pos"></div>
+
+    <div class="cmp">
+      <div>
+        <h2>Comparar estaciones</h2>
+        <div class="h2sub">Mismo combustible y período que el gráfico de arriba. Hasta 4 estaciones.</div>
+        <div class="chart" id="cchart"><div class="ctip" id="ctip2"></div></div>
+        <div class="cfoot"><span id="ccfoot">—</span><span></span></div>
+      </div>
+      <aside>
+        <div class="h2sub" style="margin-bottom:8px">Estaciones comparadas</div>
+        <div class="ser" id="ser"></div>
+        <select id="add" aria-label="Agregar estación a la comparación"></select>
+      </aside>
+    </div>
+
+    <div class="tank">
+      <h2>Costo de tanque</h2>
+      <div class="h2sub">Cuánto pagás por cargar acá y cuánto cambiaría contra tu zona.</div>
+      <div class="lit" style="margin-top:14px"><span id="litL">50 litros</span><span id="litP">—</span></div>
+      <input type="range" id="lit" min="10" max="120" step="5" value="50" aria-label="Litros a cargar">
+      <div class="res" id="tres"></div>
+    </div>
+  </section>
+
+  <section class="card panel" id="facturacion" style="margin-top:16px">
+    <div class="ph">
+      <div class="sp">
+        <h2>Facturación mensual estimada</h2>
+        <div class="h2sub" id="facsub">—</div>
+      </div>
+    </div>
+    <div class="stack" id="facbar"></div>
+    <div class="taxes" id="fac"></div>
+    <div class="notes">
+      Estimación: <b>volumen despachado al público</b> × <b>precio surtidor</b>, ambos del dataset oficial de Energía (Res. 1104) para ese período.
+      No es facturación contable: el volumen corresponde al canal “Al público”. Solo naftas y gasoil (GNC no incluido).
+    </div>
+
+    <div class="ph" style="margin-top:24px">
+      <div class="sp">
+        <h2>Historial de facturación mes a mes</h2>
+        <div class="h2sub" id="facsub2">—</div>
+      </div>
+      <div class="seg" id="hmet" role="tablist" aria-label="Métrica del historial">
+        <button role="tab" data-h="fac" class="on">Facturación $</button>
+        <button role="tab" data-h="vol">Volumen L</button>
+      </div>
+    </div>
+    <div class="chart" id="facchart"><div class="ctip" id="factip"></div></div>
+    <div class="taxes" id="fachist"></div>
+    <div class="notes">
+      Cada mes se calcula con el <b>volumen y el precio oficial</b> de ese mismo período. Sirve para ver la estacionalidad y las subas de precio,
+      no como cifra contable. Los meses sin datos oficiales cruzados no aparecen.
+    </div>
+  </section>
 
   <section class="card panel" id="impuestos" style="margin-top:16px">
     <div class="ph">
@@ -219,10 +319,18 @@ const f2=d=>d.split('-').reverse().join('/');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const DAY=864e5, T=d=>Date.parse(d+'T12:00:00'), iso=t=>new Date(t).toISOString().slice(0,10);
+const med=a=>{if(!a||!a.length)return null;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
+const pc=(p,pool)=>{if(p==null||!pool||pool.length<2)return null;const tot=pool.length;
+  return{puesto:pool.filter(v=>v<p).length+1,tot,pct:pool.filter(v=>v>p).length/tot*100,med:med(pool)}};
+const PAL=['#1747d6','#0f9d76','#d6403a','#e2b01c'];
+const FCOL={NS:'#1747d6',IN:'#3b6cf0',EURO:'#0f9d76',D500:'#e2b01c'};
+const moneyK=n=>n>=1e6?'$'+new Intl.NumberFormat('es-AR',{maximumFractionDigits:1}).format(n/1e6)+' M':money(n);
+const fmtL=n=>new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(n);
+const f2m=s=>String(s||'—').split('-').reverse().join('/');
 
-let ST=[], prices={}, VER='', HOY='';
+let ST=[], prices={}, VER='', HOY='', VOL={}, VOLPER=[];
 let st='', fuel='NS', range='30d';
-let HIST={};
+let HIST={}, CMP=[], LIT=50, HMET='fac';
 const FUELKEYS=Object.keys(FUELS);
 
 /* ── series ── */
@@ -336,6 +444,167 @@ function drawTaxes(){
     <span class="amt">${money2(pvp)}</span><span class="sh">100%</span></div>`;
 }
 
+/* ── posición, comparador y tanque ── */
+function pool(k,fn){return ST.filter(e=>fn(e)&&e.n[k]!=null).map(e=>e.n[k])}
+function drawPos(){
+  const e=ST.find(x=>x.id===st);if(!e)return;
+  const p=e.n[fuel];
+  const items=[['Todo el país',prices[fuel]||[]],['Provincia · '+(e.p||'s/d'),pool(fuel,x=>x.p===e.p)],
+               ['Localidad · '+(e.l||'s/d'),pool(fuel,x=>x.l===e.l&&x.p===e.p)]];
+  $('#pos').innerHTML=items.map(([lbl,piso])=>{
+    const r=pc(p,piso);
+    if(!r)return `<div class="pz"><div class="k" title="${esc(lbl)}">${esc(lbl)}</div><div class="big">—</div>
+      <div class="sub">Sin estaciones suficientes para comparar este combustible.</div></div>`;
+    const dif=p-r.med,t=Math.max(0,Math.min(1,r.tot>1?(r.puesto-1)/(r.tot-1):0));
+    return `<div class="pz"><div class="k" title="${esc(lbl)}">${esc(lbl)}</div>
+      <div class="big">N° ${r.puesto} <small>de ${r.tot}</small></div>
+      <div class="sub">Más barata que el <b>${r.pct.toFixed(0)}%</b> · ${dif<=0
+        ?`<span class="down">${money(-dif)} menos</span>`:`<span class="up">${money(dif)} más</span>`} que la mediana</div>
+      <div class="track"><i style="left:calc(${(t*100).toFixed(1)}% - 2.5px)"></i></div>
+      <div class="ends"><span>1° más barata</span><span>${r.tot}°</span></div></div>`;
+  }).join('');
+  $('#possub').innerHTML=p!=null?`${FUELS[fuel][0]} a ${money2(p)} por litro · puesto 1° = la estación más barata del grupo`
+    :'Sin precio para este combustible en esta estación.';
+}
+function drawCompare(){
+  const [from,to]=bounds(range),box=$('#cchart');
+  const ser=CMP.map((id,i)=>({id,i,e:ST.find(x=>x.id===id)||{},col:PAL[i%PAL.length],
+    pts:rangePts(((HIST[id]||{})[fuel]||[]),iso(from),HOY)}));
+  $('#ser').innerHTML=ser.map(x=>`<div class="s">
+    <span class="sw" style="background:${x.col}"></span>
+    <span class="nm" title="${esc((x.e.o||'')+' — '+(x.e.d||''))}">${esc((x.e.o||'—')+' · '+(x.e.l||''))}</span>
+    <span class="pc">${x.e.n&&x.e.n[fuel]!=null?money(x.e.n[fuel]):'—'}</span>
+    ${x.id===st?'<span style="width:15px"></span>':`<button class="x" data-x="${esc(x.id)}" title="Quitar de la comparación">✕</button>`}
+  </div>`).join('');
+  const act=ser.filter(x=>x.pts.length);
+  if(act.length<2){
+    box.innerHTML='<div class="ctip" id="ctip2"></div><div class="nodata">Elegí otra estación para comparar.<br><small>Se comparan con el mismo combustible y período del gráfico de arriba.</small></div>';
+    $('#ccfoot').textContent='';return;
+  }
+  const W=760,H=252,L=58,R=16,TP=16,B=32,base=H-B;
+  const allv=act.flatMap(x=>x.pts.map(p=>p[1]));
+  const mn=Math.min(...allv),mx=Math.max(...allv),pad=(mx-mn)||mx*.02,lo=mn-pad*.3,hi=mx+pad*.3;
+  const X=t=>(L+(t-from)/((to-from)||DAY)*(W-L-R)).toFixed(1);
+  const Y=v=>(TP+(hi-v)/(hi-lo)*(base-TP)).toFixed(1);
+  let g='';
+  for(let i=0;i<=4;i++){const v=hi-(hi-lo)*i/4,y=Y(v);
+    g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#eef2f8"/>`+
+       `<text x="${L-10}" y="${(+y+3.5).toFixed(1)}" text-anchor="end" font-size="10.5" fill="#8798ad">${money(Math.round(v))}</text>`;}
+  for(let i=0;i<=4;i++){const t=from+(to-from)*i/4,x=X(t);
+    g+=`<text x="${x}" y="${H-9}" text-anchor="${i===0?'start':i===4?'end':'middle'}" font-size="10.5" fill="#8798ad">${f2(iso(t))}</text>`;}
+  const paths=act.map(x=>{
+    const ts=x.pts.map(p=>T(p[0])),vs=x.pts.map(p=>p[1]);
+    let d='M'+X(ts[0])+','+Y(vs[0]);
+    for(let i=1;i<ts.length;i++)d+='H'+X(ts[i])+'V'+Y(vs[i]);
+    d+='H'+X(Math.max(to,ts[ts.length-1]));
+    return `<path d="${d}" fill="none" stroke="${x.col}" stroke-width="${x.id===st?3:2.1}" stroke-linejoin="round" stroke-linecap="round"${x.id===st?'':' opacity=".85"'}/>`+
+      ts.map((t,i)=>`<circle cx="${X(t)}" cy="${Y(vs[i])}" r="3" fill="#fff" stroke="${x.col}" stroke-width="2"/>`).join('');
+  }).join('');
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Comparación entre estaciones">${g}${paths}
+    <line id="cx2" x1="0" x2="0" y1="${TP}" y2="${base}" stroke="#0b1524" stroke-opacity=".18" stroke-dasharray="3 3" opacity="0"/>
+    <rect id="hit2" x="${L}" y="${TP}" width="${W-L-R}" height="${base-TP}" fill="transparent" style="cursor:crosshair"/>
+  </svg><div class="ctip" id="ctip2"></div>`;
+  $('#ccfoot').innerHTML=`${act.length} estaciones · rango del período ${money(mn)} – ${money(mx)}`;
+  const svg=box.querySelector('svg'),cx=box.querySelector('#cx2'),tip=box.querySelector('#ctip2');
+  box.querySelector('#hit2').addEventListener('pointermove',ev=>{
+    const r=svg.getBoundingClientRect(),k=W/r.width,x=Math.max(L,Math.min(W-R,(ev.clientX-r.left)*k));
+    const d=iso(from+(x-L)/(W-L-R)*(to-from));
+    cx.setAttribute('x1',x);cx.setAttribute('x2',x);cx.setAttribute('opacity','1');
+    const rows=act.map(s=>{const v=valueAt(s.pts,d);
+      return v==null?'':`<span style="display:block;color:${s.col}">● ${esc(s.e.l||s.e.o||'—')} · ${money2(v)}</span>`}).join('');
+    tip.innerHTML=`<b>${f2(d)}</b>${rows}`;
+    tip.style.left=x/k+'px';tip.style.top=TP*(r.height/H)+'px';tip.classList.add('show');
+  });
+  box.addEventListener('pointerleave',()=>{cx.setAttribute('opacity','0');tip.classList.remove('show')});
+}
+function drawTank(){
+  const e=ST.find(x=>x.id===st);if(!e)return;
+  const p=e.n[fuel];
+  const loc=pool(fuel,x=>x.l===e.l&&x.p===e.p),prov=pool(fuel,x=>x.p===e.p),nac=prices[fuel]||[];
+  const ref=med(loc)??med(prov)??med(nac);
+  const refLbl=med(loc)!=null?'la mediana de '+(e.l||'tu localidad'):med(prov)!=null?'la mediana de '+(e.p||'tu provincia'):'la mediana del país';
+  $('#litL').textContent=LIT+' litros';
+  $('#litP').textContent=p!=null?money(p)+' por litro':'precio no informado';
+  if(p==null||ref==null||!nac.length){$('#tres').innerHTML='<div class="rr"><span>Sin datos suficientes para calcular.</span></div>';return}
+  const aqui=p*LIT,refc=ref*LIT,dif=refc-aqui,mn=Math.min(...nac);
+  $('#tres').innerHTML=
+    `<div class="rr"><span>Cargando acá</span><b>${money(aqui)}</b></div>`+
+    `<div class="rr"><span>A ${refLbl}</span><b>${money(refc)}</b></div>`+
+    `<div class="rr ${dif>0?'win':''}"><span>${dif>0?'Te ahorrás':dif<0?'Pagás de más':'Diferencia'}</span>
+      <b class="${dif>0?'down':dif<0?'up':'flat'}">${dif===0?'$0':money(Math.abs(dif))}</b></div>`+
+    `<div class="rr"><span>En la más barata del país (${money(mn)}/L)</span><b>${money(mn*LIT)}</b></div>`;
+}
+
+/* ── facturación mensual (volumen y precio surtidor oficiales del dataset de Energía) ── */
+function facRows(v,per){
+  const m=v&&per?v.m[per]:null;if(!m)return null;
+  const rows=[];
+  for(const k of FUELKEYS){const c=m[k];if(!c)continue;
+    const L=c[0]*1000,p=c[1];rows.push({k,L,p,rev:p!=null?L*p:null});}
+  return rows.length?rows:null;
+}
+function facTot(rows){let L=0,rev=0;for(const r of rows){L+=r.L;if(r.rev!=null)rev+=r.rev}return {L,rev}}
+const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const mesLbl=p=>{const[a,b]=String(p).split('-');return MES[(+b)-1]+' '+a.slice(2)};
+
+function histBars(hist,last,met){
+  const val=h=>met==='vol'?h.L:h.rev;
+  const W=620,H=170,Q=34,R=6,base=H-26,top=14,n=hist.length;
+  const max=Math.max(...hist.map(val))||1,bw=(W-Q-R)/n,step=Math.ceil(n/7);
+  const topLbl=met==='vol'?(max>=1e6?(max/1e6).toFixed(1).replace('.',',')+' M L':fmtL(max)+' L'):moneyK(max);
+  const bars=hist.map((h,i)=>{
+    const x=Q+i*bw,bh=Math.max(2,(val(h)/max)*(base-top)),y=base-bh;
+    const lbl=(n<=14||i%step===0||i===n-1)?`<text x="${(x+bw/2).toFixed(1)}" y="${base+15}" text-anchor="middle" font-size="10" fill="#8595a8">${mesLbl(h.p).split(' ')[0]}</text>`:'';
+    return `<g><rect x="${(x+bw*0.16).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw*0.68).toFixed(1)}" height="${bh.toFixed(1)}" rx="3" fill="${h.p===last?'#1747d6':'#9db4e8'}"><title>${mesLbl(h.p)}: ${money(h.rev)} · ${fmtL(h.L)} litros</title></rect>${lbl}</g>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${met==='vol'?'Volumen despachado por mes':'Facturación por mes'}">
+    <line x1="${Q}" y1="${base}" x2="${W-R}" y2="${base}" stroke="#e6ebf4"/>
+    <line x1="${Q}" y1="${top}" x2="${W-R}" y2="${top}" stroke="#eef2f9" stroke-dasharray="3 4"/>
+    <text x="${Q-6}" y="${top+4}" text-anchor="end" font-size="10" fill="#8595a8">${topLbl}</text>
+    <text x="${Q-6}" y="${base+4}" text-anchor="end" font-size="10" fill="#8595a8">${met==='vol'?'0 L':'$0'}</text>${bars}</svg>`;
+}
+
+function drawBilling(){
+  const v=VOL[st],box=$('#fac'),bar=$('#facbar'),hc=$('#facchart'),hb=$('#fachist');
+  const per=VOLPER.length?VOLPER[VOLPER.length-1]:null,rows=facRows(v,per);
+  if(!rows){
+    box.innerHTML='<div style="color:#5b6b80;font-size:13px">Sin volumen oficial cruzado para esta estación.</div>';
+    bar.innerHTML='';hc.innerHTML='';hb.innerHTML='';
+    $('#facsub').textContent='—';$('#facsub2').textContent='—';
+    $('#kfac').textContent='—';$('#kfacsub').textContent='Sin volumen oficial cruzado';
+    return;
+  }
+  const {L:volT,rev:tot}=facTot(rows),revs=rows.filter(r=>r.rev!=null);
+  $('#facsub').innerHTML=`Volumen despachado en <b>${f2m(per)}</b> × precio surtidor oficial de ese período`;
+  bar.innerHTML=revs.map(r=>`<i style="width:${tot?r.rev/tot*100:0}%;background:${FCOL[r.k]}" title="${FUELS[r.k][0]}: ${money(r.rev)}"><span>${tot&&r.rev/tot>=.12?(r.rev/tot*100).toFixed(0)+'%':''}</span></i>`).join('');
+  box.innerHTML=rows.map(r=>`<div class="tr"><span class="sw" style="background:${FCOL[r.k]}"></span>
+    <span class="nm">${FUELS[r.k][0]}<small>${fmtL(r.L)} litros · ${r.p!=null?money2(r.p)+' por litro (oficial)':'sin precio oficial'}</small></span>
+    <span class="amt">${r.rev!=null?money(r.rev):'—'}</span>
+    <span class="sh">${r.rev!=null&&tot?(r.rev/tot*100).toFixed(1).replace('.',',')+'%':'—'}</span></div>`).join('')+
+    `<div class="tr tot"><span class="sw" style="background:#0b1524"></span>
+    <span class="nm">Total estimado · ${f2m(per)}<small>${fmtL(volT)} litros despachados · naftas y gasoil</small></span>
+    <span class="amt">${money(tot)}</span><span class="sh">100%</span></div>`;
+  $('#kfac').textContent=moneyK(tot);
+  $('#kfacsub').textContent=`Naftas y gasoil · ${f2m(per)}`;
+
+  const hist=VOLPER.map(p=>{const r=facRows(v,p);if(!r)return null;const t=facTot(r);return {p,L:t.L,rev:t.rev}}).filter(Boolean);
+  if(hist.length<2){
+    hc.innerHTML='';hb.innerHTML='';
+    $('#facsub2').textContent=hist.length?'Solo hay un período oficial: falta historial para comparar.':'Sin historial de períodos oficiales.';
+    return;
+  }
+  $('#facsub2').innerHTML=`${hist.length} períodos oficiales (${f2m(hist[0].p)} → ${f2m(hist[hist.length-1].p)}) · la barra azul es el último período`;
+  hc.innerHTML=histBars(hist,per,HMET);
+  hb.innerHTML=hist.map((h,i)=>{const val=HMET==='vol'?h.L:h.rev,pv=i?(HMET==='vol'?hist[i-1].L:hist[i-1].rev):null;
+    const d=pv?((val/pv-1)*100):null;
+    const main=HMET==='vol'?fmtL(h.L):money(h.rev);
+    const sub=HMET==='vol'?money(h.rev):fmtL(h.L)+' litros despachados';
+    return `<div class="tr"><span class="sw" style="background:${h.p===per?'#1747d6':'#c9d6ee'}"></span>
+      <span class="nm">${mesLbl(h.p)}${h.p===per?' · último':''}<small>${sub}</small></span>
+      <span class="amt">${main}</span>
+      <span class="sh">${d==null?'—':(d>0?'▲ ':'▼ ')+pct(d)}</span></div>`}).reverse().join('');
+}
+
 /* ── encabezado y KPIs ── */
 function drawHead(){
   const e=ST.find(x=>x.id===st);if(!e)return;
@@ -355,10 +624,9 @@ function drawHead(){
     $('#kvarsub').textContent=`${money(pts[0][1])} → ${money(pts[pts.length-1][1])} · desde ${f2(pts[0][0])}`;}
   else{$('#kvar').textContent='sin cambios';$('#kvar').className='v flat';
     $('#kvarsub').textContent=p!=null?'El precio no varió en el período':'Precio no informado';}
-  const all=prices[fuel]||[];
-  if(p!=null&&all.length){const cheaper=all.filter(v=>v>p).length,q=cheaper/all.length*100;
-    $('#kpos').textContent=q.toFixed(0)+'%';
-    $('#kpossub').textContent=`más barata que el ${q.toFixed(0)}% del país (${all.length} estaciones)`;}
+  const all=prices[fuel]||[],rk=pc(p,all);
+  if(rk){$('#kpos').textContent='N° '+rk.puesto;
+    $('#kpossub').textContent=`de ${rk.tot} en el país · más barata que el ${rk.pct.toFixed(0)}%`;}
   else{$('#kpos').textContent='—';$('#kpossub').textContent='Sin datos comparables';}
   $('#m4k').textContent='Mediana país · '+FUELS[fuel][1];
   $('#m4').innerHTML=all.length?money(all[Math.floor(all.length/2)])+' <small>mediana</small>':'—';
@@ -367,7 +635,7 @@ function drawHead(){
 }
 
 /* ── render ── */
-function render(){drawHead();drawChart();drawRanges();drawTaxes()}
+function render(){drawHead();drawChart();drawRanges();drawTaxes();drawPos();drawCompare();drawTank();drawBilling()}
 $('#seg').innerHTML=FUELKEYS.map(k=>`<button role="tab" data-k="${k}"${k===fuel?' class="on"':''}>${FUELS[k][0]}</button>`).join('');
 $('#chips').innerHTML=RANGE.map(([k,lbl])=>`<button role="tab" data-r="${k}"${k===range?' class="on"':''}>${lbl}</button>`).join('');
 $('#seg').onclick=e=>{const b=e.target.closest('button[data-k]');if(!b)return;fuel=b.dataset.k;
@@ -375,6 +643,8 @@ $('#seg').onclick=e=>{const b=e.target.closest('button[data-k]');if(!b)return;fu
 const setRange=k=>{range=k;$('#chips').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.r===range));render()};
 $('#chips').onclick=e=>{const b=e.target.closest('button[data-r]');if(b)setRange(b.dataset.r)};
 $('#rng').onclick=e=>{const b=e.target.closest('button[data-r]');if(b)setRange(b.dataset.r)};
+$('#hmet').onclick=e=>{const b=e.target.closest('button[data-h]');if(!b)return;HMET=b.dataset.h;
+  $('#hmet').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.h===HMET));drawBilling()};
 
 /* ── selector de estación ── */
 function fillPick(q){
@@ -384,7 +654,27 @@ function fillPick(q){
     ||`<option value="${esc(st)}">Sin resultados</option>`;
 }
 let qt;$('#q').oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>fillPick(e.target.value),200)};
-$('#pick').onchange=e=>{st=e.target.value;loadHist();render()};
+$('#pick').onchange=e=>{st=e.target.value;loadHist()};
+
+/* ── comparador y costo de tanque ── */
+function fillAdd(){
+  const e0=ST.find(x=>x.id===st),near=[],mid=[],far=[];
+  for(const e of ST){if(e.id===st)continue;
+    (e0&&e.p===e0.p&&e.l===e0.l?near:e0&&e.p===e0.p?mid:far).push(e)}
+  const opt=g=>g.map(e=>`<option value="${esc(e.id)}">${esc(e.o)} — ${esc(e.l)}, ${esc(e.p)}</option>`).join('');
+  $('#add').innerHTML='<option value="">+ Agregar estación…</option>'+
+    (near.length?`<optgroup label="Tu localidad">${opt(near)}</optgroup>`:'')+
+    (mid.length?`<optgroup label="Tu provincia">${opt(mid)}</optgroup>`:'')+
+    (far.length?`<optgroup label="Resto del país">${opt(far)}</optgroup>`:'');
+}
+$('#add').onchange=async e=>{
+  const id=e.target.value;e.target.value='';
+  if(!id||CMP.includes(id)||CMP.length>=4)return;
+  await ensureHist([id]);CMP.push(id);drawCompare();
+};
+$('#ser').onclick=e=>{const b=e.target.closest('button[data-x]');if(!b)return;
+  CMP=CMP.filter(x=>x!==b.dataset.x);drawCompare()};
+$('#lit').oninput=e=>{LIT=+e.target.value;drawTank()};
 
 /* ── carga de datos ── */
 const bcache={};
@@ -394,14 +684,23 @@ async function histPart(id){
   return bcache[b];
 }
 let lh=0;
+async function ensureHist(ids){
+  const partes=[...new Set(ids.map(i=>i.slice(0,2)))];
+  for(const j of await Promise.all(partes.map(histPart)))Object.assign(HIST,j);
+}
 async function loadHist(){
-  const t=++lh,part=await histPart(st);
+  const t=++lh;CMP=[st];fillAdd();
+  await ensureHist([st]);
   if(t!==lh)return;
-  HIST={...part};render();
+  render();
 }
 const fmt=new Intl.DateTimeFormat('es-AR',{timeZone:'America/Argentina/Buenos_Aires',dateStyle:'long',timeStyle:'short'});
 
-fetch('data.json?'+Date.now()).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
+Promise.all([
+  fetch('data.json?'+Date.now()).then(r=>{if(!r.ok)throw 0;return r.json()}),
+  fetch('volumen.json?'+Date.now()).then(r=>r.ok?r.json():{}).catch(()=>({}))
+]).then(([d,vol])=>{
+  VOL=(vol&&vol.estaciones)||{};VOLPER=(vol&&vol.periodos)||[];
   ST=d.estaciones||[];VER=d.actualizado||d.vigencia||'';HOY=(d.vigencia||'').slice(0,10);
   for(const k of FUELKEYS)prices[k]=ST.map(e=>e.n[k]).filter(v=>v!=null).sort((a,b)=>a-b);
   const q=new URLSearchParams(location.search);

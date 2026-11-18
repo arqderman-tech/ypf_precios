@@ -19,6 +19,10 @@ aside{display:flex;flex-direction:column;min-height:0;background:#fff;border-rig
 h1{font-size:23px;font-weight:800;letter-spacing:-.025em;margin:0}
 .sub{font-size:13px;color:var(--muted);margin-top:3px}
 .sub.warn{color:#b3261e;font-weight:600}
+.natls{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.natl{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--brand);
+text-decoration:none;background:#e8efff;padding:7px 12px;border-radius:10px}
+.natl:hover{background:#dbe7ff}
 .ctrl{padding:0 20px 14px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
 .seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg);border-radius:10px;padding:3px;position:relative}
 .seg input{position:absolute;opacity:0;pointer-events:none}
@@ -74,7 +78,11 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 </head>
 <body>
 <aside>
-  <div class="head"><h1>Precios YPF</h1><div class="sub" id="sub">Cargando precios…</div></div>
+  <div class="head"><h1>Precios YPF</h1><div class="sub" id="sub">Cargando precios…</div>
+    <div class="natls">
+      <a class="natl" href="argentina.html">Panorama nacional: provincias y evolución →</a>
+      <a class="natl" href="ranking.html">Ranking de ventas: volumen y facturación →</a>
+    </div></div>
   <div class="ctrl">
     <div class="seg" role="radiogroup" aria-label="Combustible" id="seg"></div>
     <input type="search" id="q" placeholder="Buscar localidad, calle u operador" aria-label="Buscar estación">

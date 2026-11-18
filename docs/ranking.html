@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ranking de ventas · Precios YPF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0b1524;--ink2:#26374d;--muted:#5b6b80;--line:#e6ebf4;--bg:#f4f6fb;--card:#fff;
+--brand:#1747d6;--brand2:#3b6cf0;--up:#d6403a;--down:#0f9d76;
+--sh:0 1px 2px #0b152410,0 10px 30px -12px #0b152426;--r:18px}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Schibsted Grotesk',system-ui,-apple-system,sans-serif;background:
+radial-gradient(1200px 600px at 85% -10%,#dbe6ff 0%,transparent 60%),radial-gradient(900px 500px at -10% 0%,#e6f6f1 0%,transparent 55%),var(--bg);
+color:var(--ink);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;padding-bottom:48px}
+a{color:inherit}
+.top{position:sticky;top:0;z-index:30;background:#0b1524;background-image:linear-gradient(100deg,#0b1524,#132a52 55%,#0b1524);
+color:#fff;display:flex;align-items:center;gap:14px;padding:12px 22px;box-shadow:0 6px 24px -10px #0b152480;flex-wrap:wrap}
+.top .back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:13px;font-weight:700;
+background:#ffffff1a;border:1px solid #ffffff2e;padding:8px 14px;border-radius:999px;transition:.2s;white-space:nowrap}
+.top .back:hover{background:#ffffff2e}
+.top .ttl{font-weight:800;letter-spacing:-.02em;font-size:15px}
+.top .ttl small{display:block;font-weight:500;font-size:11px;opacity:.6;letter-spacing:0}
+.top .sp{flex:1}
+.top select{font:inherit;font-size:13px;font-weight:700;padding:9px 12px;border-radius:11px;border:1px solid #ffffff2e;background:#ffffff14;color:#fff}
+.top select option{color:#0b1524}
+.wrap{max-width:1240px;margin:0 auto;padding:26px 22px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.panel{padding:20px 22px 18px}
+.panel h2{margin:0;font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+.panel .h2sub{font-size:12px;color:var(--muted);margin-top:3px}
+.ph{display:flex;align-items:flex-start;gap:14px}
+.ph .sp{flex:1}
+/* hero */
+.hero{display:grid;grid-template-columns:1fr auto;gap:24px;padding:26px 28px;position:relative;overflow:hidden;align-items:center}
+.hero:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:linear-gradient(180deg,var(--brand),#0f9d76)}
+.hero h1{margin:0;font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1.12}
+.hero .h2sub{margin-top:8px;font-size:13.5px;color:var(--ink2);max-width:640px}
+.seg{display:inline-grid;grid-auto-flow:column;background:#eaeff8;border-radius:12px;padding:4px;gap:4px}
+.seg button{font:inherit;font-size:13px;font-weight:700;color:var(--muted);background:none;border:0;padding:9px 14px;border-radius:9px;cursor:pointer;white-space:nowrap;transition:.16s}
+.seg button.on{background:#fff;color:var(--brand);box-shadow:0 1px 3px #0b152426}
+.hero .hint{font-size:11.5px;color:var(--muted);margin-top:8px;text-align:right}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px}
+.kpi{padding:18px 20px;border-radius:var(--r);background:#fff;border:1px solid var(--line);box-shadow:var(--sh)}
+.kpi .k{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.kpi .v{font-size:30px;font-weight:800;letter-spacing:-.035em;margin-top:6px;line-height:1}
+.kpi .d{font-size:12.5px;color:var(--muted);margin-top:7px}
+.knote{margin-top:10px;font-size:12.5px;color:var(--muted);background:#eef4ff;border:1px solid #d6e3fb;border-radius:11px;padding:10px 14px;line-height:1.5}
+/* barras y tablas */
+.stack{margin-top:16px;height:34px;border-radius:11px;overflow:hidden;display:flex;border:1px solid var(--line);background:#f7f9fd}
+.stack i{display:block;height:100%;position:relative;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.stack i span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:800;color:#fff}
+.taxes{margin-top:14px;display:grid;gap:2px}
+.tr{display:grid;grid-template-columns:14px 1fr auto auto;gap:12px;align-items:center;padding:10px 13px;border-radius:11px}
+.tr:nth-child(odd){background:#f9fbfe}
+.tr .sw{width:12px;height:12px;border-radius:4px}
+.tr .nm{font-size:13.5px;font-weight:700}
+.tr .nm small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);margin-top:2px}
+.tr .amt{font-size:14.5px;font-weight:800;text-align:right;letter-spacing:-.01em;white-space:nowrap}
+.tr .sh{font-size:11.5px;font-weight:700;color:var(--muted);text-align:right;min-width:48px}
+/* filtros */
+.ctrlrow{display:grid;grid-template-columns:1fr 1fr 1.4fr auto;gap:10px;align-items:center}
+select,input[type=search]{font:inherit;font-size:13.5px;font-weight:600;padding:10px 12px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--ink);min-width:0}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.btn{font:inherit;font-size:13px;font-weight:700;padding:10px 14px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#c9d6ee;background:#f7f9fd}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+/* layout */
+.grid{display:grid;grid-template-columns:1fr 372px;gap:16px;align-items:start;margin-top:16px}
+/* ranking */
+.rk{display:grid;grid-template-columns:26px 20px minmax(0,1fr) 84px auto 50px;gap:10px;align-items:center;padding:11px 13px;border-radius:11px}
+.rk:nth-child(odd){background:#f9fbfe}
+.rk:hover{background:#eef4ff}
+.rk .pos{font-size:12px;font-weight:800;color:var(--muted);text-align:right}
+.rk .nm{font-size:13.5px;font-weight:700;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rk .nm:hover{color:var(--brand)}
+.rk .nm small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis}
+.rk .bwrap{height:6px;border-radius:4px;background:#eef2f9;overflow:hidden}
+.rk .bwrap i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--brand),#3b6cf0);transition:width .4s}
+.rk .amt{font-size:14px;font-weight:800;text-align:right;white-space:nowrap;letter-spacing:-.01em}
+.rk .sh{font-size:11.5px;font-weight:700;color:var(--muted);text-align:right}
+.rk input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand);cursor:pointer}
+.rk.sel{background:linear-gradient(100deg,#eef4ff,#f9fbfe);box-shadow:inset 0 0 0 1px #c9dafd}
+.rkhead{display:grid;grid-template-columns:26px 20px minmax(0,1fr) 84px auto 50px;gap:10px;padding:0 13px 8px;
+font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--line)}
+.rkhead span:nth-child(3){text-align:left}.rkhead span:nth-child(5),.rkhead span:nth-child(6){text-align:right}
+.more{margin:14px auto 0;display:block}
+.empty{padding:26px 4px;color:var(--muted);font-size:13.5px;line-height:1.5}
+/* comparador */
+.cmphead{display:flex;align-items:flex-start;gap:10px}
+.cmphead .sp{flex:1}
+.ccard{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:12px 13px;border-radius:12px;background:#f9fbfe;border:1px solid var(--line);margin-top:8px;position:relative}
+.ccard .nm{font-size:13px;font-weight:800;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ccard .nm:hover{color:var(--brand)}
+.ccard .sub{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ccard .big{font-size:15px;font-weight:800;text-align:right;letter-spacing:-.02em;white-space:nowrap}
+.ccard .big small{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0}
+.ccard .x{position:absolute;top:8px;right:8px;border:0;background:none;color:#9aa7b8;cursor:pointer;font-size:13px;line-height:1;padding:3px 5px;border-radius:7px}
+.ccard .x:hover{color:var(--up);background:#fdecea}
+.ccard svg.spk{grid-column:1/3;width:100%;height:auto;display:block;margin-top:6px;overflow:visible}
+.spklbl{grid-column:1/3;display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:2px}
+.credit{margin:22px 0 0;text-align:center;font-size:12px;color:var(--muted)}
+.nodata{padding:60px 20px;text-align:center;color:#5b6b80;font-size:14px;line-height:1.6}
+@media(max-width:1000px){
+ .kpis{grid-template-columns:1fr 1fr}
+ .grid{grid-template-columns:1fr}
+ .ctrlrow{grid-template-columns:1fr 1fr}
+ .hero{grid-template-columns:1fr}
+ .hero .hint{text-align:left}
+ .rk,.rkhead{grid-template-columns:24px 18px minmax(0,1fr) auto 46px}
+ .rk .bwrap,.rkhead span:nth-child(4){display:none}
+}
+@media(max-width:620px){.kpis{grid-template-columns:1fr}.ctrlrow{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="back" href="index.html">← Volver al mapa</a>
+  <div class="ttl">Ranking de ventas<small>Volumen y facturación oficiales · Energía (Res. 1104)</small></div>
+  <div class="sp"></div>
+  <select id="per" aria-label="Período"></select>
+</div>
+
+<div class="wrap">
+  <section class="card hero">
+    <div>
+      <h1>Qué estaciones venden más</h1>
+      <div class="h2sub" id="herosub">—</div>
+    </div>
+    <div>
+      <div class="seg" id="met" role="tablist" aria-label="Métrica del ranking">
+        <button role="tab" data-m="fac" class="on">Facturación $</button>
+        <button role="tab" data-m="vol">Volumen L</button>
+      </div>
+      <div class="hint">Elegí la métrica y filtrá por provincia o localidad.</div>
+    </div>
+  </section>
+
+  <div class="kpis">
+    <div class="kpi"><div class="k">Facturación estimada · período</div><div class="v" id="k1">—</div><div class="d" id="k1s">—</div></div>
+    <div class="kpi"><div class="k">Volumen despachado</div><div class="v" id="k2">—</div><div class="d" id="k2s">—</div></div>
+    <div class="kpi"><div class="k">Estaciones con datos</div><div class="v" id="k3">—</div><div class="d" id="k3s">—</div></div>
+    <div class="kpi"><div class="k">Ticket promedio por estación</div><div class="v" id="k4">—</div><div class="d" id="k4s">—</div></div>
+  </div>
+  <div class="knote">Estos totales y el ranking consideran <b>únicamente las estaciones con datos oficiales cruzados</b> (volumen Res. 1104 “Al público”). Puede haber otras estaciones que vendan más pero no aparezcan por falta de datos. Se descartan los meses con volumen atípico (errores de carga del dataset oficial).</div>
+
+  <section class="card panel" style="margin-top:16px">
+    <div class="ph"><div class="sp">
+      <h2>Mezcla por producto</h2><div class="h2sub" id="mixsub">—</div>
+    </div></div>
+    <div class="stack" id="mix"></div>
+    <div class="taxes" id="mixt"></div>
+  </section>
+
+  <section class="card panel" style="margin-top:16px">
+    <div class="ctrlrow">
+      <select id="prov" aria-label="Provincia"><option value="">Todas las provincias</option></select>
+      <select id="loc" aria-label="Localidad"><option value="">Todas las localidades</option></select>
+      <input type="search" id="q" placeholder="Buscar estación, localidad o provincia…" aria-label="Buscar">
+      <button class="btn" id="clear" type="button">Limpiar filtros</button>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card panel">
+      <div class="ph"><div class="sp">
+        <h2>Ranking</h2>
+        <div class="h2sub" id="rksub">—</div>
+      </div></div>
+      <div class="rkhead" style="margin-top:14px"><span>#</span><span></span><span>Estación</span><span></span><span id="rkcol">Facturación</span><span>Parte</span></div>
+      <div id="rank"></div>
+      <button class="btn more" id="more" type="button" hidden>Mostrar más</button>
+    </section>
+
+    <aside class="card panel">
+      <div class="cmphead"><div class="sp">
+        <h2>Comparar estaciones</h2>
+        <div class="h2sub" id="cmpsub">Elegí estaciones del ranking (hasta 5) para verlas lado a lado.</div>
+      </div></div>
+      <div id="cmp"></div>
+    </aside>
+  </div>
+
+  <p class="credit">Fuente: Secretaría de Energía (Res. 1104), canal “Al público”. Estimación de facturación = volumen × precio surtidor oficial del período. Solo YPF, naftas y gasoil (sin GNC).</p>
+</div>
+
+<script>
+const FUELS={NS:'Nafta Súper',IN:'Infinia',EURO:'Euro Diésel',D500:'Diésel 500'};
+const FKEYS=['NS','IN','D500','EURO'];
+const FCOL={NS:'#1747d6',IN:'#3b6cf0',EURO:'#0f9d76',D500:'#e2b01c'};
+const PAL=['#1747d6','#0f9d76','#e2b01c','#d6403a','#8b5cf6'];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
+const money=n=>'$'+new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(n);
+const moneyK=n=>Math.abs(n)>=1e6?'$'+new Intl.NumberFormat('es-AR',{maximumFractionDigits:1}).format(n/1e6)+' M':money(n);
+const fmtL=n=>new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(n);
+const litK=n=>Math.abs(n)>=1e6?new Intl.NumberFormat('es-AR',{maximumFractionDigits:1}).format(n/1e6)+' M L':fmtL(n)+' L';
+const pctF=n=>(n*100).toFixed(1).replace('.',',')+'%';
+const f2m=s=>String(s||'—').split('-').reverse().join('/');
+const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const mesLbl=p=>{const[a,b]=String(p).split('-');return MES[(+b)-1]+' '+a.slice(2)};
+const val=r=>MET==='fac'?r.rev:r.L;
+const fmtV=n=>MET==='fac'?moneyK(n):litK(n);
+
+let DOC={},VOL={},PER=[],PER_SEL='',PROV='',LOC='',MET='fac',Q='',SEL=[],LIMIT=100,ROWS=[],FILT=[];
+
+function build(){
+  ROWS=[];
+  for(const id in VOL){
+    const s=VOL[id],m=s.m[PER_SEL];
+    if(!m)continue;
+    let L=0,rev=0,prod={},prodRev={};
+    for(const k of FKEYS){const c=m[k];if(!c)continue;const l=c[0]*1000;prod[k]=l;
+      prodRev[k]=c[1]?l*c[1]:0;L+=l;if(c[1])rev+=l*c[1];}
+    const d=DOC[id]||{};
+    ROWS.push({id,op:d.o||s.op||'',loc:d.l||s.loc||'',prov:d.p||s.prov||'',L,rev,prod,prodRev});
+  }
+  fillProv();apply();
+}
+
+function fillProv(keep){
+  const provs=[...new Set(ROWS.map(r=>r.prov).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  if(!keep||!provs.includes(PROV))PROV=provs.includes(PROV)?PROV:'';
+  $('#prov').innerHTML='<option value="">Todas las provincias</option>'+
+    provs.map(p=>`<option value="${esc(p)}"${p===PROV?' selected':''}>${esc(p)}</option>`).join('');
+  fillLoc();
+}
+function fillLoc(){
+  const base=ROWS.filter(r=>!PROV||r.prov===PROV);
+  const locs=[...new Set(base.map(r=>r.loc).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  if(!locs.includes(LOC))LOC='';
+  $('#loc').innerHTML='<option value="">Todas las localidades</option>'+
+    (locs.length>1?locs.map(l=>`<option value="${esc(l)}"${l===LOC?' selected':''}>${esc(l)}</option>`).join(''):'');
+}
+
+function apply(){
+  const q=norm(Q);
+  FILT=ROWS.filter(r=>(!PROV||r.prov===PROV)&&(!LOC||r.loc===LOC)
+      &&(!q||norm(r.op+' '+r.loc+' '+r.prov).includes(q)));
+  FILT.sort((a,b)=>MET==='fac'?((b.rev-a.rev)||(b.L-a.L)):((b.L-a.L)||(b.rev-a.rev)));
+  LIMIT=100;render();
+}
+
+function render(){
+  const n=FILT.length,volT=FILT.reduce((a,r)=>a+r.L,0),revT=FILT.reduce((a,r)=>a+r.rev,0);
+  const provs=new Set(FILT.map(r=>r.prov).filter(Boolean)).size;
+
+  $('#k1').textContent=moneyK(revT);
+  $('#k1s').textContent=`${mesLbl(PER_SEL)} · ${PROV||LOC?'filtro aplicado':'todo el país'} · precio surtidor oficial`;
+  $('#k2').textContent=litK(volT);
+  $('#k2s').textContent=`naftas y gasoil · ${n?fmtL(volT/n):'—'} L por estación`;
+  $('#k3').textContent=new Intl.NumberFormat('es-AR').format(n);
+  $('#k3s').textContent=`de ${Object.keys(VOL).length} bocas YPF cruzadas · ${provs} provincia${provs===1?'':'s'}`;
+  $('#k4').textContent=n?moneyK(revT/n):'—';
+  $('#k4s').textContent='facturación promedio por estación del filtro';
+
+  /* mezcla por producto */
+  const mix={},mixRev={};
+  for(const k of FKEYS){mix[k]=FILT.reduce((a,r)=>a+(r.prod[k]||0),0);mixRev[k]=FILT.reduce((a,r)=>a+(r.prodRev[k]||0),0);}
+  const mixT=FKEYS.reduce((a,k)=>a+mix[k],0),revPT=FKEYS.reduce((a,k)=>a+mixRev[k],0);
+  $('#mixsub').innerHTML=mixT?`Reparto del volumen despachado en <b>${mesLbl(PER_SEL)}</b>${PROV||LOC?' (filtro aplicado)':''}`:'Sin datos.';
+  $('#mix').innerHTML=FKEYS.map(k=>`<i style="width:${mixT?mix[k]/mixT*100:0}%;background:${FCOL[k]}" title="${FUELS[k]}: ${litK(mix[k])}"><span>${mixT&&mix[k]/mixT>=.1?(mix[k]/mixT*100).toFixed(0)+'%':''}</span></i>`).join('');
+  $('#mixt').innerHTML=FKEYS.map(k=>`<div class="tr"><span class="sw" style="background:${FCOL[k]}"></span>
+    <span class="nm">${FUELS[k]}<small>${litK(mix[k])}</small></span>
+    <span class="amt">${moneyK(mixRev[k])}</span>
+    <span class="sh">${mixT?pctF(mix[k]/mixT):'—'}</span></div>`).join('')+
+    `<div class="tr" style="background:#eef4ff"><span class="sw" style="background:#0b1524"></span>
+     <span class="nm">Total<small>${litK(mixT)} despachados</small></span>
+     <span class="amt">${moneyK(revPT)}</span><span class="sh">100%</span></div>`;
+
+  /* ranking */
+  $('#rkcol').textContent=MET==='fac'?'Facturación':'Volumen';
+  $('#rksub').innerHTML=`${n===1?'1 estación':n+' estaciones'} · ${mesLbl(PER_SEL)} · ordenado por <b>${MET==='fac'?'facturación estimada':'volumen despachado'}</b>${PROV?` · ${esc(PROV)}`:''}${LOC?` · ${esc(LOC)}`:''}`;
+  const max=FILT.length?val(FILT[0])||1:1,base=MET==='fac'?revT:volT;
+  const out=FILT.slice(0,LIMIT).map((r,i)=>{
+    const v=val(r),sel=SEL.includes(r.id);
+    return `<div class="rk${sel?' sel':''}">
+      <span class="pos">${i+1}</span>
+      <input type="checkbox" data-id="${esc(r.id)}"${sel?' checked':''} aria-label="Comparar ${esc(r.op)}">
+      <a class="nm" href="estacion.html?id=${encodeURIComponent(r.id)}" title="${esc(r.op)}">${esc(r.op)}
+        <small>${esc(r.loc||'—')}, ${esc(r.prov||'—')}${r.rev&&r.L?' · '+money2p(r.rev/r.L)+'/L':''}</small></a>
+      <span class="bwrap"><i style="width:${max?v/max*100:0}%"></i></span>
+      <span class="amt">${fmtV(v)}</span>
+      <span class="sh">${base?pctF(v/base):'—'}</span>
+    </div>`;}).join('');
+  $('#rank').innerHTML=out||'<div class="empty">No hay estaciones que cumplan el filtro en este período.</div>';
+  $('#more').hidden=FILT.length<=LIMIT;
+  $('#more').textContent=`Mostrar más (${Math.min(100,FILT.length-LIMIT)} de ${FILT.length-LIMIT})`;
+
+  $('#herosub').innerHTML=VOL[Object.keys(VOL)[0]]?
+    `Período <b>${f2m(PER_SEL)}</b> del dataset oficial. Volumen del canal “Al público” y precio surtidor de cada boca, cruzados con las estaciones del mapa.`:'Cargando…';
+  renderCmp();
+}
+const money2p=n=>'$'+new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(n);
+
+function series(id){
+  return PER.slice(-12).map(p=>{
+    const s=VOL[id],m=s&&s.m[p];
+    if(!m)return null;
+    let L=0,rev=0;
+    for(const k of FKEYS){const c=m[k];if(!c)continue;const l=c[0]*1000;L+=l;if(c[1])rev+=l*c[1];}
+    return {p,L,rev};
+  });
+}
+function spark(pts,color){
+  const ns=pts.filter(Boolean);
+  if(ns.length<2)return'';
+  const W=300,H=42,P=4,vs=ns.map(x=>MET==='fac'?x.rev:x.L);
+  const mn=Math.min(...vs),mx=Math.max(...vs),rng=(mx-mn)||1;
+  const xy=ns.map((x,i)=>[P+i*(W-2*P)/(ns.length-1),H-P-((vs[i]-mn)/rng)*(H-2*P)]);
+  return `<svg class="spk" viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución mensual">
+    <polyline points="${xy.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${xy[xy.length-1][0].toFixed(1)}" cy="${xy[xy.length-1][1].toFixed(1)}" r="3" fill="${color}"/></svg>`;
+}
+
+function renderCmp(){
+  const box=$('#cmp');
+  if(!SEL.length){
+    box.innerHTML='<div class="empty">Todavía no elegiste ninguna. Marcá estaciones en el ranking para comparar su facturación y ver la evolución de los últimos 12 meses.</div>';
+    $('#cmpsub').textContent='Elegí estaciones del ranking (hasta 5) para verlas lado a lado.';
+    return;
+  }
+  const rs=SEL.map(id=>FILT.find(r=>r.id===id)||ROWS.find(r=>r.id===id)).filter(Boolean);
+  const tot=rs.reduce((a,r)=>a+val(r),0);
+  $('#cmpsub').innerHTML=`${rs.length} de 5 · ${mesLbl(PER_SEL)}`;
+  box.innerHTML=rs.map((r,i)=>{
+    const d=DOC[r.id]||{},s=VOL[r.id];
+    const pts=series(r.id),ns=pts.filter(Boolean);
+    const c=PAL[SEL.indexOf(r.id)%PAL.length];
+    return `<div class="ccard">
+      <a class="nm" href="estacion.html?id=${encodeURIComponent(r.id)}">${esc(r.op)}</a>
+      <button class="x" data-id="${esc(r.id)}" aria-label="Quitar">✕</button>
+      <div class="sub">${esc(r.loc||'—')}, ${esc(r.prov||'—')}${s&&s.nro?' · boca '+esc(s.nro):''}</div>
+      <div class="big">${fmtV(val(r))}<small>${tot?pctF(val(r)/tot):'—'} del comparado</small></div>
+      ${spark(pts,c)}
+      ${ns.length>1?`<div class="spklbl"><span>${mesLbl(ns[0].p)}</span><span>${mesLbl(ns[ns.length-1].p)}</span></div>`:''}
+    </div>`;}).join('');
+}
+
+/* ── controles ── */
+$('#met').onclick=e=>{const b=e.target.closest('button[data-m]');if(!b)return;MET=b.dataset.m;
+  $('#met').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.m===MET));
+  FILT.sort((a,b)=>MET==='fac'?((b.rev-a.rev)||(b.L-a.L)):((b.L-a.L)||(b.rev-a.rev)));render()};
+$('#per').onchange=e=>{PER_SEL=e.target.value;build();};
+$('#prov').onchange=e=>{PROV=e.target.value;fillLoc();apply()};
+$('#loc').onchange=e=>{LOC=e.target.value;apply()};
+let qt;$('#q').oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{Q=e.target.value;apply()},200)};
+$('#clear').onclick=()=>{PROV='';LOC='';Q='';$('#q').value='';fillProv();apply()};
+$('#more').onclick=()=>{LIMIT+=100;const y=window.scrollY;render();window.scrollTo(0,y)};
+$('#rank').onchange=e=>{const c=e.target.closest('input[type=checkbox]');if(!c)return;
+  const id=c.dataset.id;
+  if(c.checked){if(SEL.length>=5){c.checked=false;return}SEL.push(id)}else SEL=SEL.filter(x=>x!==id);
+  render()};
+$('#cmp').onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;
+  SEL=SEL.filter(x=>x!==b.dataset.id);render()};
+
+/* ── carga ── */
+Promise.all([
+  fetch('data.json?'+Date.now()).then(r=>{if(!r.ok)throw 0;return r.json()}),
+  fetch('volumen.json?'+Date.now()).then(r=>{if(!r.ok)throw 0;return r.json()})
+]).then(([d,v])=>{
+  for(const e of (d.estaciones||[]))DOC[e.id]=e;
+  VOL=v.estaciones||{};PER=v.periodos||[];
+  if(!PER.length||!Object.keys(VOL).length)throw 0;
+  const q=new URLSearchParams(location.search);
+  PER_SEL=PER.includes(q.get('per'))?q.get('per'):PER[PER.length-1];
+  PROV=q.get('prov')||'';LOC=q.get('loc')||'';MET=q.get('m')==='vol'?'vol':'fac';
+  Q=q.get('q')||'';
+  $('#q').value=Q;
+  $('#met').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.m===MET));
+  $('#per').innerHTML=PER.slice().reverse().map(p=>`<option value="${p}"${p===PER_SEL?' selected':''}>${mesLbl(p)}</option>`).join('');
+  build();
+}).catch(()=>{
+  document.querySelector('.grid').outerHTML='<div class="card nodata">No se pudo cargar <b>volumen.json</b>.<br><small>Corré <code>python scripts/volumen.py</code> y serví la carpeta con <code>python -m http.server</code>.</small></div>';
+});
+</script>
+</body>
+</html>
