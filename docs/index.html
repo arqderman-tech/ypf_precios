@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Precios YPF: dónde cargar más barato</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+<style>
+:root{--ink:#0e1b2c;--muted:#5b6b80;--line:#dde3ec;--bg:#f3f6fa;--brand:#1747d6;--s0:#0f9d76;--s1:#5fb24a;--s2:#e2b01c;--s3:#ee8a2b;--s4:#d6403a}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:'Schibsted Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--bg);display:grid;grid-template-columns:392px 1fr;font-variant-numeric:tabular-nums}
+aside{display:flex;flex-direction:column;min-height:0;background:#fff;border-right:1px solid var(--line)}
+#map{height:100%;min-height:0;background:#e8edf3}
+.head{padding:18px 20px 12px}
+h1{font-size:23px;font-weight:800;letter-spacing:-.025em;margin:0}
+.sub{font-size:13px;color:var(--muted);margin-top:3px}
+.sub.warn{color:#b3261e;font-weight:600}
+.ctrl{padding:0 20px 14px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg);border-radius:10px;padding:3px;position:relative}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{text-align:center;padding:8px 0;font-size:12px;font-weight:700;border-radius:8px;cursor:pointer;color:var(--muted);white-space:nowrap}
+.seg input:checked+label{background:#fff;color:var(--ink);box-shadow:0 1px 3px #0e1b2c26}
+.seg input:focus-visible+label{outline:2px solid var(--brand)}
+.row{display:flex;gap:8px}
+input[type=search],select{flex:1;min-width:0;font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:9px 12px;border-radius:10px;border:0;background:var(--brand);color:#fff;cursor:pointer;white-space:nowrap}
+.chk{font-size:13px;color:var(--muted);display:flex;gap:7px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 20px 4px}
+.stats div{font-size:12px;color:var(--muted)}
+.stats b{display:block;font-size:19px;color:var(--ink);letter-spacing:-.01em}
+.legend{padding:8px 20px 12px;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line)}
+.bar{height:7px;border-radius:4px;background:linear-gradient(90deg,var(--s0),var(--s1),var(--s2),var(--s3),var(--s4));margin-bottom:4px}
+.bar+div{display:flex;justify-content:space-between}
+.list{overflow:auto;flex:1;min-height:0}
+.it{display:grid;grid-template-columns:1fr auto;gap:2px 12px;width:100%;text-align:left;font:inherit;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 20px;cursor:pointer;color:inherit}
+.it:hover,.it:focus-visible{background:var(--bg)}
+.it .nm{font-weight:700;font-size:14px}.it .pc{font-weight:800;font-size:16px;text-align:right}
+.it .ad,.it .ds{font-size:12px;color:var(--muted)}.it .ds{text-align:right}
+.it .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+.empty{padding:28px 20px;color:var(--muted);font-size:14px;line-height:1.5}
+.msg{margin:10px 20px 0;padding:9px 11px;border-radius:10px;background:#fdecea;color:#8a1c14;font-size:13px;display:none}
+.pinwrap{overflow:visible}
+.pin,.cl{position:absolute;transform:translate(-50%,-50%);color:#fff;white-space:nowrap;border:2px solid #fff;box-shadow:0 1px 5px #0e1b2c66;font-weight:800}
+.pin{padding:3px 8px;border-radius:999px;font-size:12px}
+.pin.aprox{border-style:dashed;opacity:.82}
+.cl{padding:5px 10px;border-radius:14px;text-align:center;font-size:13px;line-height:1.15}
+.cl small{display:block;font-size:10px;font-weight:500;opacity:.9}
+.s0{background:var(--s0)}.s1{background:var(--s1)}.s2{background:var(--s2);color:#2a2100}.s3{background:var(--s3)}.s4{background:var(--s4)}
+.pp{min-width:230px;font-family:'Schibsted Grotesk',system-ui,sans-serif}
+.pp h3{margin:0;font-size:16px;letter-spacing:-.01em}.pp .a{font-size:12px;color:var(--muted);margin:2px 0 10px}
+.pp .r{display:flex;justify-content:space-between;padding:5px 8px;border-radius:7px;font-size:13px}
+.pp .r.on{background:#e8efff;font-weight:700}
+.pp .n{font-size:11.5px;color:#8a5a00;margin-top:8px}.pp .v{font-size:11px;color:var(--muted);margin-top:8px}
+.pp a{display:block;margin-top:10px;text-align:center;background:var(--brand);color:#fff!important;text-decoration:none;font-weight:700;padding:8px;border-radius:9px;font-size:13px}
+.pp{width:min(300px,68vw)}
+.pp .r{width:100%;border:0;background:none;font:inherit;font-size:13px;cursor:pointer;text-align:left;color:inherit}
+.pp .r:hover{background:var(--bg)}.pp .r.on{background:#e8efff;font-weight:700}.pp .r.off{color:#9aa7b8;cursor:default}
+.pp .hint{font-size:11px;color:var(--muted);margin:8px 0 2px}
+.ch{margin-top:2px}.ch svg{width:100%;height:auto;display:block}.ch .cap{font-size:12px;color:var(--ink);margin-top:2px}
+.empty-ch{font-size:12px;color:var(--muted);padding:18px 0;text-align:center}
+@media(max-width:800px){
+ body{grid-template-columns:1fr;grid-template-rows:52vh 1fr}
+ #map{order:1}aside{order:2;overflow:auto;border-right:0;border-top:1px solid var(--line)}
+ .list{overflow:visible}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="head"><h1>Precios YPF</h1><div class="sub" id="sub">Cargando precios…</div></div>
+  <div class="ctrl">
+    <div class="seg" role="radiogroup" aria-label="Combustible" id="seg"></div>
+    <input type="search" id="q" placeholder="Buscar localidad, calle u operador" aria-label="Buscar estación">
+    <div class="row"><select id="prov" aria-label="Provincia"><option value="">Todo el país</option></select><button class="btn" id="loc" type="button">Cerca de mí</button></div>
+    <label class="chk"><input type="checkbox" id="dud"> Incluir estaciones con ubicación dudosa</label>
+  </div>
+  <div class="msg" id="msg" role="alert"></div>
+  <div class="stats"><div>Más barata<b id="st0">–</b></div><div>Mediana<b id="st1">–</b></div><div>Más cara<b id="st2">–</b></div></div>
+  <div class="legend"><div class="bar"></div><div><span id="lo"></span><span>comparado con todo el país</span><span id="hi"></span></div></div>
+  <div class="list" id="list" aria-live="polite"></div>
+</aside>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<script>
+const FUELS={NS:'Súper',IN:'Infinia',EURO:'Euro Diésel',D500:'Diésel 500'};
+const FULL={NS:'Nafta Súper',IN:'Infinia',EURO:'Euro Diésel',D500:'Diésel 500'};
+const EXACT=new Set(['altura','exacta_csv_oficial','altura_osm','interseccion','poste_kilometrico','calle_csv_oficial','revisada']);
+const $=s=>document.querySelector(s);
+const money=n=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(n);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const km=(a,b,c,d)=>{const r=Math.PI/180,x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 12742*Math.asin(Math.sqrt(x))};
+const state={fuel:'NS',q:'',prov:'',dud:false,pos:null};
+let ST=[],scale={lo:0,hi:1},markers=new Map();
+
+$('#seg').innerHTML=Object.entries(FUELS).map(([k,v])=>`<input type="radio" name="f" id="f${k}" value="${k}"${k==='NS'?' checked':''}><label for="f${k}">${v}</label>`).join('');
+
+const map=L.map('map',{zoomControl:false}).setView([-38.4,-63.6],5);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap contributors &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
+
+const bucket=p=>Math.max(0,Math.min(4,Math.floor((p-scale.lo)/((scale.hi-scale.lo)||1)*5)));
+const cluster=L.markerClusterGroup({maxClusterRadius:55,showCoverageOnHover:false,disableClusteringAtZoom:12,chunkedLoading:true,
+  iconCreateFunction:c=>{const ms=c.getAllChildMarkers(),min=ms.reduce((m,x)=>Math.min(m,x.options.price),Infinity);
+    return L.divIcon({className:'pinwrap',iconSize:[0,0],html:`<span class="cl s${bucket(min)}">desde ${money(min)}<small>${ms.length} estaciones</small></span>`})}});
+map.addLayer(cluster);
+
+const f2=d=>d.split('-').reverse().join('/');
+function popup(e){
+  const note=e.pr==='sospechosa'?'Ubicación dudosa: confirmá la dirección antes de ir.':EXACT.has(e.pr)?'':'Ubicación aproximada (centro de la zona).';
+  return `<div class="pp" data-id="${esc(e.id)}"><h3>${esc(e.o)}</h3><div class="a">${esc(e.d)}<br>${esc(e.l)}, ${esc(e.p)}</div>`+
+    Object.keys(FUELS).map(k=>e.n[k]!=null?`<button class="r" data-k="${k}"><span>${FULL[k]}</span><b>${money(e.n[k])}</b></button>`:`<div class="r off"><span>${FULL[k]}</span><b>–</b></div>`).join('')+
+    `<div class="hint">Tocá un combustible para ver su historial</div><div class="ch" aria-live="polite"></div>`+
+    (note?`<div class="n">${note}</div>`:'')+(e.v?`<div class="v">Precio vigente desde ${f2(e.v)}</div>`:'')+
+    `<a href="https://www.google.com/maps/dir/?api=1&destination=${e.la},${e.lo}" target="_blank" rel="noopener">Cómo llegar</a></div>`;
+}
+let FIN='',VER='';const histCache={};
+async function hist(id){
+  const b=id.slice(0,2);
+  if(!histCache[b])histCache[b]=fetch(`hist/${b}.json?v=${encodeURIComponent(VER)}`).then(r=>r.ok?r.json():{}).catch(()=>({}));
+  return (await histCache[b])[id]||{};
+}
+function chart(s){
+  if(!s||!s.length)return '<div class="empty-ch">Todavía no hay historial para este combustible.</div>';
+  const D=864e5,T=d=>Date.parse(d+'T12:00:00'),W=300,H=120,L=6,R=6,Tp=16,B=20,base=H-B;
+  const t0=T(s[0][0]),t1=Math.max(T(FIN||s[s.length-1][0]),T(s[s.length-1][0])),span=Math.max(t1-t0,7*D);
+  const X=t=>(L+(t-(t1-span))/span*(W-L-R)).toFixed(1);
+  const v=s.map(a=>a[1]),mn=Math.min(...v),mx=Math.max(...v),pad=(mx-mn)||mx*.02,lo=mn-pad*.25,hi=mx+pad*.25;
+  const Y=p=>(Tp+(hi-p)/(hi-lo)*(base-Tp)).toFixed(1);
+  let d=`M${X(t0)},${Y(v[0])}`;s.slice(1).forEach(([f,p])=>{d+=`H${X(T(f))}V${Y(p)}`});d+=`H${X(t1)}`;
+  const dots=s.map(([f,p])=>`<circle cx="${X(T(f))}" cy="${Y(p)}" r="3" fill="#fff" stroke="#1747d6" stroke-width="2"><title>${f2(f)}: ${money(p)}</title></circle>`).join('');
+  const ch=(v[v.length-1]/v[0]-1)*100,tx=(x,y,a,t)=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="10" fill="#5b6b80">${t}</text>`;
+  const cap=s.length>1?`Desde ${f2(s[0][0])}: ${ch>=0?'+':''}${ch.toFixed(1).replace('.',',')}% (${money(v[0])} → ${money(v[v.length-1])})`:`Sin cambios desde ${f2(s[0][0])}. El gráfico se completa día a día.`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Historial de precios"><line x1="${L}" x2="${W-R}" y1="${base}" y2="${base}" stroke="#dde3ec"/><path d="${d}V${base}H${X(t0)}Z" fill="#1747d61f"/><path d="${d}" fill="none" stroke="#1747d6" stroke-width="2"/>${dots}`+
+    tx(L,11,'start',money(mx))+(mn!==mx?tx(L,base-4,'start',money(mn)):'')+(X(t0)<W-90?tx(X(t0),H-5,'start',f2(s[0][0])):'')+tx(W-R,H-5,'end',FIN?f2(FIN):'hoy')+`</svg><div class="cap">${cap}</div>`;
+}
+map.on('popupopen',ev=>{
+  const root=ev.popup.getElement().querySelector('.pp');if(!root)return;
+  const id=root.dataset.id,e=ST.find(x=>x.id===id),box=root.querySelector('.ch');
+  const sel=async k=>{root.querySelectorAll('.r[data-k]').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+    box.innerHTML='<div class="empty-ch">Cargando historial…</div>';const hh=await hist(id);box.innerHTML=chart(hh[k]);ev.popup.update()};
+  root.addEventListener('click',x=>{const b=x.target.closest('.r[data-k]');if(b)sel(b.dataset.k)});
+  sel(e.n[state.fuel]!=null?state.fuel:Object.keys(e.n)[0]);
+});
+function mk(e){
+  const p=e.n[state.fuel];
+  const m=L.marker([e.la,e.lo],{price:p,icon:L.divIcon({className:'pinwrap',iconSize:[0,0],html:`<span class="pin s${bucket(p)}${EXACT.has(e.pr)?'':' aprox'}">${money(p)}</span>`})});
+  m.bindPopup(()=>popup(e),{maxWidth:340});markers.set(e.id,m);return m;
+}
+function visible(){
+  const q=norm(state.q);
+  return ST.filter(e=>e.n[state.fuel]!=null&&(state.dud||e.pr!=='sospechosa')&&(!state.prov||e.p===state.prov)&&(!q||e.h.includes(q)));
+}
+function render(fit){
+  const all=ST.filter(e=>e.n[state.fuel]!=null&&e.pr!=='sospechosa').map(e=>e.n[state.fuel]).sort((a,b)=>a-b);
+  scale={lo:all[Math.floor(all.length*.05)]||0,hi:all[Math.floor(all.length*.95)]||1};
+  $('#lo').textContent=money(scale.lo);$('#hi').textContent=money(scale.hi);
+  const vs=visible();markers=new Map();cluster.clearLayers();cluster.addLayers(vs.map(mk));
+  if(fit&&vs.length)map.fitBounds(L.latLngBounds(vs.map(e=>[e.la,e.lo])).pad(.1),{maxZoom:13});
+  list();
+}
+function list(){
+  const b=map.getBounds(),f=state.fuel;
+  const vs=visible().filter(e=>b.contains([e.la,e.lo]));
+  if(state.pos)vs.forEach(e=>e.d_=km(state.pos[0],state.pos[1],e.la,e.lo));
+  vs.sort((a,c)=>a.n[f]-c.n[f]||(a.d_-c.d_)||0);
+  const pr=vs.map(e=>e.n[f]),med=pr.length?pr[Math.floor(pr.length/2)]:null;
+  $('#st0').textContent=pr.length?money(pr[0]):'–';$('#st1').textContent=med?money(med):'–';$('#st2').textContent=pr.length?money(pr[pr.length-1]):'–';
+  $('#list').innerHTML=vs.length?vs.slice(0,30).map(e=>`<button class="it" data-id="${esc(e.id)}"><span class="nm"><i class="dot s${bucket(e.n[f])}"></i>${esc(e.o)}</span><span class="pc">${money(e.n[f])}</span><span class="ad">${esc(e.d)}, ${esc(e.l)}</span><span class="ds">${state.pos&&e.d_!=null?e.d_.toFixed(1).replace('.',',')+' km':''}</span></button>`).join('')
+    :'<div class="empty">No hay estaciones en esta parte del mapa. Alejá el zoom, cambiá de provincia o borrá la búsqueda.</div>';
+}
+function show(id){
+  const e=ST.find(x=>x.id===id),m=markers.get(id);if(!m)return;
+  map.setView([e.la,e.lo],Math.max(map.getZoom(),15));cluster.zoomToShowLayer(m,()=>m.openPopup());
+}
+function error(t){const m=$('#msg');m.textContent=t;m.style.display=t?'block':'none'}
+
+document.querySelectorAll('input[name=f]').forEach(r=>r.onchange=()=>{state.fuel=r.value;render()});
+let t;$('#q').oninput=e=>{clearTimeout(t);t=setTimeout(()=>{state.q=e.target.value;render(true)},250)};
+$('#prov').onchange=e=>{state.prov=e.target.value;render(true)};
+$('#dud').onchange=e=>{state.dud=e.target.checked;render()};
+$('#list').onclick=e=>{const b=e.target.closest('.it');if(b)show(b.dataset.id)};
+map.on('moveend',list);
+let me;$('#loc').onclick=()=>{error('');map.locate({enableHighAccuracy:true,timeout:10000})};
+map.on('locationfound',e=>{state.pos=[e.latlng.lat,e.latlng.lng];me&&me.remove();
+  me=L.circleMarker(e.latlng,{radius:8,color:'#fff',weight:3,fillColor:'#1747d6',fillOpacity:1}).addTo(map);map.setView(e.latlng,13)});
+map.on('locationerror',()=>error('No pudimos obtener tu ubicación. Permití el acceso desde el candado del navegador y probá de nuevo.'));
+
+fetch('data.json?'+Date.now()).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
+  ST=d.estaciones;FIN=(d.actualizado||d.vigencia||'').slice(0,10);VER=d.actualizado||d.vigencia||'';ST.forEach(e=>e.h=norm([e.o,e.d,e.l,e.p].join(' ')));
+  const fmt=new Intl.DateTimeFormat('es-AR',{timeZone:'America/Argentina/Buenos_Aires',dateStyle:'medium',timeStyle:'short'});
+  const sub=$('#sub');
+  if(d.actualizado){const h=(Date.now()-new Date(d.actualizado))/36e5;
+    sub.textContent='Actualizado '+fmt.format(new Date(d.actualizado));
+    if(h>36){sub.textContent+=': los datos pueden estar desactualizados';sub.classList.add('warn')}}
+  else sub.textContent='Precios vigentes al '+d.vigencia.split('-').reverse().join('/');
+  $('#prov').innerHTML+=[...new Set(ST.map(e=>e.p))].filter(Boolean).sort((a,b)=>a.localeCompare(b,'es')).map(p=>`<option>${esc(p)}</option>`).join('');
+  if(!ST.some(e=>e.pr==='sospechosa'))$('#dud').closest('label').hidden=true;
+  render();
+}).catch(()=>{$('#sub').textContent='No se pudieron cargar los precios';
+  error('No se pudo leer data.json. Si abriste el archivo con doble clic, serví la carpeta con: python -m http.server');});
+</script>
+</body>
+</html>
