@@ -57,6 +57,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .pp .r.on{background:#e8efff;font-weight:700}
 .pp .n{font-size:11.5px;color:#8a5a00;margin-top:8px}.pp .v{font-size:11px;color:var(--muted);margin-top:8px}
 .pp a{display:block;margin-top:10px;text-align:center;background:var(--brand);color:#fff!important;text-decoration:none;font-weight:700;padding:8px;border-radius:9px;font-size:13px}
+.pp a.alt{background:#e8efff;color:var(--brand)!important;margin-top:8px}
 .pp{width:min(300px,68vw)}
 .pp .r{width:100%;border:0;background:none;font:inherit;font-size:13px;cursor:pointer;text-align:left;color:inherit}
 .pp .r:hover{background:var(--bg)}.pp .r.on{background:#e8efff;font-weight:700}.pp .r.off{color:#9aa7b8;cursor:default}
@@ -123,6 +124,7 @@ function popup(e){
     Object.keys(FUELS).map(k=>e.n[k]!=null?`<button class="r" data-k="${k}"><span>${FULL[k]}</span><b>${money(e.n[k])}</b></button>`:`<div class="r off"><span>${FULL[k]}</span><b>–</b></div>`).join('')+
     `<div class="hint">Tocá un combustible para ver su historial</div><div class="ch" aria-live="polite"></div>`+
     (note?`<div class="n">${note}</div>`:'')+(e.v?`<div class="v">Precio vigente desde ${f2(e.v)}</div>`:'')+
+    `<a class="alt" href="estacion.html?id=${encodeURIComponent(e.id)}&f=${encodeURIComponent(state.fuel)}">Ver análisis completo: precios, evolución e impuestos →</a>`+
     `<a href="https://www.google.com/maps/dir/?api=1&destination=${e.la},${e.lo}" target="_blank" rel="noopener">Cómo llegar</a></div>`;
 }
 function popupEl(e){const d=document.createElement('div');d.innerHTML=popup(e);return d.firstElementChild}
