@@ -109,7 +109,7 @@ const esri=u=>L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/
 const claro=L.layerGroup([esri('World_Light_Gray_Base'),esri('World_Light_Gray_Reference')]).addTo(map);
 const calles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
 L.control.layers({'Mapa claro':claro,'Calles':calles},null,{position:'bottomleft'}).addTo(map);
- 
+
 const bucket=p=>Math.max(0,Math.min(4,Math.floor((p-scale.lo)/((scale.hi-scale.lo)||1)*5)));
 const cluster=L.markerClusterGroup({maxClusterRadius:55,showCoverageOnHover:false,disableClusteringAtZoom:12,chunkedLoading:true,
   iconCreateFunction:c=>{const ms=c.getAllChildMarkers(),min=ms.reduce((m,x)=>Math.min(m,x.options.price),Infinity);
@@ -138,12 +138,12 @@ function chart(s){
   const X=t=>(L+(t-(t1-span))/span*(W-L-R)).toFixed(1);
   const v=s.map(a=>a[1]),mn=Math.min(...v),mx=Math.max(...v),pad=(mx-mn)||mx*.02,lo=mn-pad*.25,hi=mx+pad*.25;
   const Y=p=>(Tp+(hi-p)/(hi-lo)*(base-Tp)).toFixed(1);
-  let d=`M${X(t0)},${Y(v[0])}`;s.slice(1).forEach(([f,p])=>{d+=`H${X(T(f))}V${Y(p)}`});d+=`H${X(t1)}`;
+  const ts=s.length===1?t1-span:t0;let d=`M${X(ts)},${Y(v[0])}`;s.slice(1).forEach(([f,p])=>{d+=`H${X(T(f))}V${Y(p)}`});d+=`H${X(t1)}`;
   const dots=s.map(([f,p])=>`<circle cx="${X(T(f))}" cy="${Y(p)}" r="3" fill="#fff" stroke="#1747d6" stroke-width="2"><title>${f2(f)}: ${money(p)}</title></circle>`).join('');
   const ch=(v[v.length-1]/v[0]-1)*100,tx=(x,y,a,t)=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="10" fill="#5b6b80">${t}</text>`;
   const cap=s.length>1?`Desde ${f2(s[0][0])}: ${ch>=0?'+':''}${ch.toFixed(1).replace('.',',')}% (${money(v[0])} → ${money(v[v.length-1])})`:`Sin cambios desde ${f2(s[0][0])}. El gráfico se completa día a día.`;
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Historial de precios"><line x1="${L}" x2="${W-R}" y1="${base}" y2="${base}" stroke="#dde3ec"/><path d="${d}V${base}H${X(t0)}Z" fill="#1747d61f"/><path d="${d}" fill="none" stroke="#1747d6" stroke-width="2"/>${dots}`+
-    tx(L,11,'start',money(mx))+(mn!==mx?tx(L,base-4,'start',money(mn)):'')+(X(t0)<W-90?tx(X(t0),H-5,'start',f2(s[0][0])):'')+tx(W-R,H-5,'end',FIN?f2(FIN):'hoy')+`</svg><div class="cap">${cap}</div>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Historial de precios"><line x1="${L}" x2="${W-R}" y1="${base}" y2="${base}" stroke="#dde3ec"/><path d="${d}V${base}H${X(ts)}Z" fill="#1747d61f"/><path d="${d}" fill="none" stroke="#1747d6" stroke-width="2"/>${dots}`+
+    tx(L,11,'start',money(mx))+(mn!==mx?tx(L,base-4,'start',money(mn)):'')+(s.length>1&&X(t0)<W-90?tx(X(t0),H-5,'start',f2(s[0][0])):'')+tx(W-R,H-5,'end',FIN?f2(FIN):'hoy')+`</svg><div class="cap">${cap}</div>`;
 }
 map.on('popupopen',ev=>{
   const root=ev.popup.getElement().querySelector('.pp');if(!root)return;
