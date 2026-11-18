@@ -7,7 +7,7 @@ Uso:
 
 Variable opcional: YPF_WORKERS (consultas en paralelo, default 10).
 """
-import argparse, hashlib, json, os, random, statistics, sys, time
+import argparse, hashlib, json, os, random, statistics, sys, time, unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
@@ -87,6 +87,35 @@ def compactar(data):
     return out
 
 
+PROVINCIAS = ["Buenos Aires", "Catamarca", "Chaco", "Chubut", "Ciudad de Buenos Aires", "Córdoba",
+              "Corrientes", "Entre Ríos", "Formosa", "Jujuy", "La Pampa", "La Rioja", "Mendoza",
+              "Misiones", "Neuquén", "Río Negro", "Salta", "San Juan", "San Luis", "Santa Cruz",
+              "Santa Fe", "Santiago del Estero", "Tierra del Fuego", "Tucumán"]
+
+
+def _clave(txt):
+    t = unicodedata.normalize("NFD", str(txt)).encode("ascii", "ignore").decode().upper()
+    return " ".join(t.replace(".", " ").split())
+
+
+_PROV = {_clave(n): n for n in PROVINCIAS}
+_PROV.update({"CAPITAL FEDERAL": "Ciudad de Buenos Aires", "CABA": "Ciudad de Buenos Aires",
+              "CIUDAD AUTONOMA DE BUENOS AIRES": "Ciudad de Buenos Aires", "CIUDAD DE BUENOS AIRES": "Ciudad de Buenos Aires"})
+
+
+def normalizar_provincia(valor):
+    """Unifica mayúsculas/minúsculas y acentos. Acepta variantes como 'CA CATAMARCA'."""
+    if not valor:
+        return valor
+    k = _clave(valor)
+    if k in _PROV:
+        return _PROV[k]
+    if k.startswith("CA ") and k[3:] in _PROV:
+        return _PROV[k[3:]]
+    print(f"AVISO: provincia no reconocida: {valor!r}")
+    return str(valor).strip().title()
+
+
 def precio(e, prod):
     return next((p["pvp"] for p in e["productos"] if p.get("descripcion") == prod and p.get("pvp")), None)
 
@@ -159,6 +188,8 @@ def main():
     ap.add_argument("--solo-build", action="store_true")
     solo = ap.parse_args().solo_build
     data = json.loads(DB.read_text(encoding="utf-8"))
+    for e in data:
+        e["ubicacion"]["provincia"] = normalizar_provincia(e["ubicacion"].get("provincia"))
     ahora = datetime.now(ART)
     if not solo:
         actualizar_precios(data)
@@ -167,6 +198,7 @@ def main():
     validas, excl, med = filtrar_outliers(data)
     print(f"Excluidas por Súper >{MAX_DESVIO_NS:.0%} de la mediana (${med:.0f}): {len(excl)} -> data/excluidas.csv")
     historial_estaciones(validas, hoy)
+    DB.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
     est = compactar(validas)
     meta = {"actualizado": None if solo else ahora.isoformat(timespec="minutes"),
             "vigencia": max((e["v"] for e in est), default=""), "mediana_ns": med,
