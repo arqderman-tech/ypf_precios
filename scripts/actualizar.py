@@ -72,6 +72,13 @@ def actualizar_precios(data):
             est["productos"], est["hash"], est["consulta"] = r["productos"], r["hash"], r["consulta"]
 
 
+def _impuestos(p):
+    """Desglose del precio por producto (para el dashboard por estación)."""
+    return {"neto": round(p.get("neto") or 0, 2), "iva": round(p.get("iva") or 0, 2),
+            "icl": round(p.get("icl") or 0, 2), "idc": round(p.get("idc") or 0, 2),
+            "tv": round(p.get("tasaVial") or 0, 2)}
+
+
 def compactar(data):
     out = []
     for e in data:
@@ -84,6 +91,7 @@ def compactar(data):
             "la": round(u["latitud"], 5), "lo": round(u["longitud"], 5),
             "pr": u.get("precision") or "sin_dato",
             "n": {p["descripcion"]: p["pvp"] for p in e["productos"] if p.get("pvp")},
+            "tx": {p["descripcion"]: _impuestos(p) for p in e["productos"] if p.get("pvp")},
             "v": max((p.get("vigencia", "")[:10] for p in e["productos"]), default=""),
         })
     return out
