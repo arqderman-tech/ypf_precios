@@ -1,0 +1,36 @@
+# Estaciones sin ubicación confirmada en la planilla revisada: se ocultan del mapa.
+# Para mostrar una, cargá sus coordenadas en estaciones.json y borrá su línea de acá.
+00311
+00324
+00332
+00348
+00463
+00568
+00625
+01033
+01142
+01415
+01657
+01688
+02170
+02227
+02243
+02249
+02340
+02350
+02373
+02610
+02698
+02789
+02794
+02822
+02837
+02879
+02909
+03159
+03272
+03298
+03302
+03329
+03339
+04013
