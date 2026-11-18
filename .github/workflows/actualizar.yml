@@ -32,6 +32,13 @@ jobs:
       - name: Actualizar precios
         if: github.event_name != 'push'
         run: python scripts/actualizar.py
+      - name: Volumen y facturación (Res. 1104)
+        if: github.event_name != 'push'
+        continue-on-error: true
+        # Corre todos los días: mira la fecha de modificación del recurso oficial y solo baja/cruza
+        # el CSV (~134 MB) cuando cambió (≈1 vez por mes). Si todavía no salió el mes nuevo,
+        # reintenta la corrida siguiente. El CSV se baja a una carpeta temporal y nunca se guarda.
+        run: python scripts/volumen.py
       - name: Guardar cambios
         if: github.event_name != 'push'
         run: |
