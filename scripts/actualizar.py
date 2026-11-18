@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DB, OUT, HIST = ROOT/"data"/"estaciones.json", ROOT/"docs"/"data.json", ROOT/"data"/"historial.csv"
 ART = ZoneInfo("America/Argentina/Buenos_Aires")
 PRODUCTOS = ("NS", "IN", "EURO", "D500")
+SIN_UBIC = ROOT/"data"/"sin_ubicacion.txt"
 HIST_DIR, EXCL = ROOT/"docs"/"hist", ROOT/"data"/"excluidas.csv"
 MAX_ANTIGUEDAD_DIAS = 30  # estación inválida si su Súper no se actualiza hace más de 30 días
 MAX_DESVIO_NS = 0.22  # estación inválida si su Súper se desvía >22% de la mediana
@@ -129,14 +130,18 @@ def filtrar_outliers(data, hoy):
     """Descarta estaciones cuyos precios no son confiables. Se recalcula en cada corrida.
 
     1) Nafta Súper se desvía más de 22% de la mediana de ese día.
+    0) No tiene ubicación confirmada (data/sin_ubicacion.txt).
     2) Su precio no se actualiza hace más de 30 días (vigencia vieja = precio no vigente).
     Las diferencias regionales reales (Tierra del Fuego ~-17%, La Pampa ~-15%) quedan adentro.
     """
-    med = statistics.median(v for v in (precio(e, "NS") for e in data) if v)
+    con_ubic = [e for e in data if e["ubicacion"].get("latitud") is not None and e["ubicacion"].get("longitud") is not None]
+    med = statistics.median(v for v in (precio(e, "NS") for e in con_ubic) if v)
     validas, excl = [], []
     for e in data:
         v, vig, motivo = precio(e, "NS"), vigencia(e, "NS"), None
-        if v and abs(v / med - 1) > MAX_DESVIO_NS:
+        if e["ubicacion"].get("latitud") is None or e["ubicacion"].get("longitud") is None:
+            motivo = "sin ubicacion confirmada"
+        elif v and abs(v / med - 1) > MAX_DESVIO_NS:
             motivo = f"desvio {(v / med - 1) * 100:.1f}% vs mediana"
         else:
             try:
@@ -211,6 +216,10 @@ def main():
     data = json.loads(DB.read_text(encoding="utf-8"))
     for e in data:
         e["ubicacion"]["provincia"] = normalizar_provincia(e["ubicacion"].get("provincia"))
+    sin = {l.strip() for l in SIN_UBIC.read_text(encoding="utf-8").splitlines() if l.strip() and not l.startswith("#")} if SIN_UBIC.exists() else set()
+    for e in data:
+        if e["apies"] in sin:
+            e["ubicacion"].update(latitud=None, longitud=None, precision="sin_ubicacion")
     ahora = datetime.now(ART)
     if not solo:
         actualizar_precios(data)
