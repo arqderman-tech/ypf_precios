@@ -11,6 +11,7 @@ Mapa web con los precios de nafta y diésel de ~1.300 estaciones YPF. Un GitHub 
 - `data/estaciones.json`: base de estaciones (ubicación + últimos precios). Se actualiza sola.
 - `scripts/actualizar.py`: consulta cada estación, guarda precios, genera `docs/data.json` y suma una fila diaria a `data/historial.csv` (mín, mediana, promedio, máx por producto).
 - `docs/index.html`: el mapa. Lee `docs/data.json`.
+- `docs/estacion.html`: dashboard de una estación (evolución por período y desglose de impuestos). Se abre desde el popup del mapa y lee `docs/data.json` + `docs/hist/NN.json`.
 - Los precios salen de la API de transparencia fiscal de YPF, consultando solo las estaciones que ya están en la base (no escanea todo el rango).
 - Si más del 30% de las consultas fallan, no se pisa nada. Si falla una estación suelta, conserva su precio anterior.
 
