@@ -9,7 +9,7 @@ Variable opcional: YPF_WORKERS (consultas en paralelo, default 10).
 """
 import argparse, hashlib, json, os, random, statistics, sys, time, unicodedata
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -20,6 +20,7 @@ DB, OUT, HIST = ROOT/"data"/"estaciones.json", ROOT/"docs"/"data.json", ROOT/"da
 ART = ZoneInfo("America/Argentina/Buenos_Aires")
 PRODUCTOS = ("NS", "IN", "EURO", "D500")
 HIST_DIR, EXCL = ROOT/"docs"/"hist", ROOT/"data"/"excluidas.csv"
+MAX_ANTIGUEDAD_DIAS = 30  # estación inválida si su Súper no se actualiza hace más de 30 días
 MAX_DESVIO_NS = 0.22  # estación inválida si su Súper se desvía >22% de la mediana
 MAX_FALLAS = 0.30  # si falla más del 30% de las consultas, no se pisa nada
 
@@ -120,18 +121,38 @@ def precio(e, prod):
     return next((p["pvp"] for p in e["productos"] if p.get("descripcion") == prod and p.get("pvp")), None)
 
 
-def filtrar_outliers(data):
-    """Descarta estaciones cuyo Nafta Súper difiere >22% de la mediana (precio no vigente/erróneo)."""
+def vigencia(e, prod):
+    return next((p.get("vigencia", "")[:10] for p in e["productos"] if p.get("descripcion") == prod and p.get("pvp")), "")
+
+
+def filtrar_outliers(data, hoy):
+    """Descarta estaciones cuyos precios no son confiables. Se recalcula en cada corrida.
+
+    1) Nafta Súper se desvía más de 22% de la mediana de ese día.
+    2) Su precio no se actualiza hace más de 30 días (vigencia vieja = precio no vigente).
+    Las diferencias regionales reales (Tierra del Fuego ~-17%, La Pampa ~-15%) quedan adentro.
+    """
     med = statistics.median(v for v in (precio(e, "NS") for e in data) if v)
     validas, excl = [], []
     for e in data:
-        v = precio(e, "NS")
-        (excl if v and abs(v / med - 1) > MAX_DESVIO_NS else validas).append(e)
+        v, vig, motivo = precio(e, "NS"), vigencia(e, "NS"), None
+        if v and abs(v / med - 1) > MAX_DESVIO_NS:
+            motivo = f"desvio {(v / med - 1) * 100:.1f}% vs mediana"
+        else:
+            try:
+                dias = (date.fromisoformat(hoy) - date.fromisoformat(vig)).days
+            except ValueError:
+                dias = 0
+            if dias > MAX_ANTIGUEDAD_DIAS:
+                motivo = f"precio sin actualizar hace {dias} dias (vigencia {vig})"
+        (excl if motivo else validas).append(e)
+        if motivo:
+            e["_motivo"] = motivo
     with open(EXCL, "w", encoding="utf-8") as f:
-        f.write("apies,operador,localidad,pvp_NS,mediana_NS,desvio_pct\n")
+        f.write("apies,operador,localidad,provincia,pvp_NS,mediana_NS,vigencia_NS,motivo\n")
         for e in excl:
-            v, u = precio(e, "NS"), e["ubicacion"]
-            f.write(f'{e["apies"]},"{u.get("operador")}","{u.get("localidad")}",{v},{med},{(v/med-1)*100:.1f}\n')
+            u = e["ubicacion"]
+            f.write(f'{e["apies"]},"{u.get("operador")}","{u.get("localidad")}",{u.get("provincia")},{precio(e, "NS")},{med},{vigencia(e, "NS")},{e.pop("_motivo")}\n')
     return validas, excl, med
 
 
@@ -195,8 +216,8 @@ def main():
         actualizar_precios(data)
         DB.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
     hoy = ahora.strftime("%Y-%m-%d")
-    validas, excl, med = filtrar_outliers(data)
-    print(f"Excluidas por Súper >{MAX_DESVIO_NS:.0%} de la mediana (${med:.0f}): {len(excl)} -> data/excluidas.csv")
+    validas, excl, med = filtrar_outliers(data, hoy)
+    print(f"Excluidas (Súper >{MAX_DESVIO_NS:.0%} de la mediana de hoy ${med:.0f}, o precio viejo): {len(excl)} -> data/excluidas.csv")
     historial_estaciones(validas, hoy)
     DB.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
     est = compactar(validas)
