@@ -105,8 +105,11 @@ $('#seg').innerHTML=Object.entries(FUELS).map(([k,v])=>`<input type="radio" name
 
 const map=L.map('map',{zoomControl:false}).setView([-38.4,-63.6],5);
 L.control.zoom({position:'bottomright'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap contributors &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
-
+const esri=u=>L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/'+u+'/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:16,maxZoom:19,attribution:'Tiles &copy; Esri'});
+const claro=L.layerGroup([esri('World_Light_Gray_Base'),esri('World_Light_Gray_Reference')]).addTo(map);
+const calles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
+L.control.layers({'Mapa claro':claro,'Calles':calles},null,{position:'bottomleft'}).addTo(map);
+ 
 const bucket=p=>Math.max(0,Math.min(4,Math.floor((p-scale.lo)/((scale.hi-scale.lo)||1)*5)));
 const cluster=L.markerClusterGroup({maxClusterRadius:55,showCoverageOnHover:false,disableClusteringAtZoom:12,chunkedLoading:true,
   iconCreateFunction:c=>{const ms=c.getAllChildMarkers(),min=ms.reduce((m,x)=>Math.min(m,x.options.price),Infinity);
