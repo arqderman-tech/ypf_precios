@@ -2,7 +2,7 @@ name: Actualizar precios y publicar mapa
 
 on:
   schedule:
-    - cron: "11 10 * * *"   # 10:11 UTC = 07:11 hora Argentina (UTC-3, sin horario de verano)
+    - cron: "45 06 * * *"   # 10:11 UTC = 07:11 hora Argentina (UTC-3, sin horario de verano)
   workflow_dispatch:         # botón "Run workflow" para probar a mano
   push:
     branches: [main]
