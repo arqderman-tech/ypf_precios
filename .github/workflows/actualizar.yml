@@ -2,11 +2,11 @@ name: Actualizar precios y publicar mapa
 
 on:
   schedule:
-    - cron: "45 06 * * *"   # 10:11 UTC = 07:11 hora Argentina (UTC-3, sin horario de verano)
-  workflow_dispatch:         # botón "Run workflow" para probar a mano
+    - cron: "45 06 * * *"
+  workflow_dispatch:
   push:
     branches: [main]
-    paths: ["docs/**"]       # republica si cambiás el diseño del mapa
+    paths: ["docs/**"]
 
 permissions:
   contents: write
@@ -18,10 +18,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  actualizar:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -35,9 +33,6 @@ jobs:
       - name: Volumen y facturación (Res. 1104)
         if: github.event_name != 'push'
         continue-on-error: true
-        # Corre todos los días: mira la fecha de modificación del recurso oficial y solo baja/cruza
-        # el CSV (~134 MB) cuando cambió (≈1 vez por mes). Si todavía no salió el mes nuevo,
-        # reintenta la corrida siguiente. El CSV se baja a una carpeta temporal y nunca se guarda.
         run: python scripts/volumen.py
       - name: Guardar cambios
         if: github.event_name != 'push'
@@ -51,4 +46,14 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
-      - uses: actions/deploy-pages@v4
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
