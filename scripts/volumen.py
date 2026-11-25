@@ -17,7 +17,7 @@ Uso:
   python scripts/volumen.py --forzar               # reconstruye igual
   python scripts/volumen.py --csv X.csv --registro Y.csv   # usa archivos locales (sin bajar)
 """
-import argparse, collections, csv, difflib, json, math, re, shutil, sys, tempfile, unicodedata
+import argparse, collections, csv, difflib, json, math, re, shutil, sys, tempfile, time, unicodedata
 from pathlib import Path
 
 import requests
@@ -67,8 +67,15 @@ def per_mes(s):
 
 def recurso_info():
     """URLs y fecha de modificación del recurso de precios, vía la API de datos abiertos (CKAN)."""
-    r = requests.get(API, timeout=30)
-    r.raise_for_status()
+    for intento in range(3):
+        try:
+            r = requests.get(API, timeout=60)
+            r.raise_for_status()
+            break
+        except requests.RequestException:
+            if intento == 2:
+                raise
+            time.sleep(10)
     res = r.json()["result"]["resources"]
     pre = next((x for x in res if x.get("id") == RES_PRECIOS), {})
     reg = next((x for x in res if x.get("id") == RES_REGISTRO), {})
@@ -77,16 +84,26 @@ def recurso_info():
 
 
 def descargar(url, dest):
-    print(f"Descargando {url}")
-    with requests.get(url, stream=True, timeout=300) as r:
-        r.raise_for_status()
-        n = 0
-        with open(dest, "wb") as f:
-            for chunk in r.iter_content(1 << 20):
-                f.write(chunk)
-                n += len(chunk)
-    print(f"  {n / 1e6:.1f} MB -> {dest.name} (temporal, no se guarda en el repo)")
-    return dest
+    """Baja el CSV (~134 MB) con reintentos: datos.energia.gob.ar es lento e inestable
+    y un corte a mitad de descarga no debería tirar toda la corrida."""
+    for intento in range(4):
+        try:
+            print(f"Descargando {url}" + (f" (reintento {intento})" if intento else ""))
+            with requests.get(url, stream=True, timeout=(30, 600)) as r:
+                r.raise_for_status()
+                n = 0
+                with open(dest, "wb") as f:
+                    for chunk in r.iter_content(1 << 20):
+                        f.write(chunk)
+                        n += len(chunk)
+            print(f"  {n / 1e6:.1f} MB -> {dest.name} (temporal, no se guarda en el repo)")
+            return dest
+        except requests.RequestException as e:
+            if intento == 3:
+                raise
+            espera = 20 * (intento + 1)
+            print(f"  descarga fallida ({type(e).__name__}: {e}); reintento en {espera}s")
+            time.sleep(espera)
 
 
 def leer_registro(path):
@@ -261,7 +278,8 @@ def main():
     previo = json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else {}
     try:
         if a.csv:
-            mod, csv_url, reg_url = None, None, None
+            mod, csv_url = None, None
+            reg_url = recurso_info()["registro"]
         else:
             info = recurso_info()
             csv_url, reg_url, mod = info["precios"], info["registro"], info["mod"]
