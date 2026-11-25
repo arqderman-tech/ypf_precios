@@ -17,6 +17,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 DB, OUT, HIST = ROOT/"data"/"estaciones.json", ROOT/"docs"/"data.json", ROOT/"data"/"historial.csv"
+SERIE = ROOT/"docs"/"serie.json"
 ART = ZoneInfo("America/Argentina/Buenos_Aires")
 PRODUCTOS = ("NS", "IN", "EURO", "D500")
 SIN_UBIC = ROOT/"data"/"sin_ubicacion.txt"
@@ -217,6 +218,23 @@ def historial(est, hoy):
     HIST.write_text("\n".join(previo) + "\n")
 
 
+def serie_nacional():
+    """Pasa los agregados diarios de data/historial.csv a docs/serie.json (lo lee la página nacional)."""
+    filas = []
+    if HIST.exists():
+        for l in HIST.read_text(encoding="utf-8").splitlines()[1:]:
+            c = l.split(",")
+            if len(c) == 7:
+                try:
+                    filas.append({"f": c[0], "p": c[1], "e": int(c[2]), "min": float(c[3]),
+                                  "med": float(c[4]), "avg": float(c[5]), "max": float(c[6])})
+                except ValueError:
+                    pass
+    filas.sort(key=lambda r: (r["f"], r["p"]))
+    SERIE.write_text(json.dumps({"nacional": filas}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(f"Serie nacional: {len(filas)} filas -> {SERIE.relative_to(ROOT)}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--solo-build", action="store_true")
@@ -244,6 +262,7 @@ def main():
     OUT.write_text(json.dumps(meta, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     if not solo:
         historial(est, hoy)
+    serie_nacional()
     print(f"OK: {len(est)} estaciones con coordenadas -> {OUT.relative_to(ROOT)}")
 
 
