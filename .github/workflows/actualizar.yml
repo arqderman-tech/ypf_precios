@@ -2,11 +2,11 @@ name: Actualizar precios y publicar mapa
 
 on:
   schedule:
-    - cron: "11 10 * * *"   # 10:11 UTC = 07:11 hora Argentina (UTC-3)
-  workflow_dispatch:
+    - cron: "11 10 * * *"   # 10:11 UTC = 07:11 hora Argentina (UTC-3, sin horario de verano)
+  workflow_dispatch:         # botón "Run workflow" para probar a mano
   push:
     branches: [main]
-    paths: ["docs/**"]
+    paths: ["docs/**"]       # republica si cambiás el diseño del mapa
 
 permissions:
   contents: write
@@ -18,8 +18,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  actualizar:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,10 +32,8 @@ jobs:
       - name: Actualizar precios
         if: github.event_name != 'push'
         run: python scripts/actualizar.py
-      - name: Volumen y facturación (Res. 1104)
-        if: github.event_name != 'push'
-        continue-on-error: true
-        run: python scripts/volumen.py
+      # El volumen (Res. 1104) NO corre acá: datos.energia.gob.ar no es alcanzable desde
+      # los runners de GitHub. Lo corre el runner self-hosted en el Pi (volumen.yml).
       - name: Guardar cambios
         if: github.event_name != 'push'
         run: |
@@ -46,14 +46,4 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
