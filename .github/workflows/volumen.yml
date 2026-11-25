@@ -1,0 +1,38 @@
+name: Volumen EESS (self-hosted)
+
+# Este job corre en un runner self-hosted (Raspberry Pi) porque datos.energia.gob.ar
+# no es alcanzable desde los runners de GitHub (timeout TCP desde EE.UU.).
+# El Pi está en Argentina y llega al servidor sin problema.
+
+on:
+  schedule:
+    - cron: "23 12 * * *"   # 12:23 UTC = 09:23 hora Argentina, después de la corrida de precios
+  workflow_dispatch:         # botón "Run workflow" para probar a mano
+
+permissions:
+  contents: write
+
+concurrency:
+  group: volumen
+  cancel-in-progress: false
+
+jobs:
+  volumen:
+    runs-on: [self-hosted, linux, arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Volumen y facturación (Res. 1104)
+        # Corre todos los días: mira la fecha de modificación del recurso oficial y solo baja/cruza
+        # el CSV (~134 MB) cuando cambió (≈1 vez por mes). Si el Pi está apagado, reintenta al otro día.
+        run: python scripts/volumen.py
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/volumen.json
+          git diff --staged --quiet || git commit -m "Volumen EESS $(TZ=America/Argentina/Buenos_Aires date +'%Y-%m-%d %H:%M')"
+          git push
