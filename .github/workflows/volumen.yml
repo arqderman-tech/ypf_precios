@@ -21,14 +21,18 @@ jobs:
     runs-on: [self-hosted, linux, arm64]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install -r requirements.txt
+      # NO usamos actions/setup-python: no hay build para Debian 13 arm64.
+      # Usamos el Python del sistema de la Pi con un venv local.
+      # Si falla por falta de venv: sudo apt install python3-venv
+      - name: Preparar entorno Python
+        run: |
+          python3 --version
+          python3 -m venv .venv
+          .venv/bin/pip install -r requirements.txt
       - name: Volumen y facturación (Res. 1104)
         # Corre todos los días: mira la fecha de modificación del recurso oficial y solo baja/cruza
         # el CSV (~134 MB) cuando cambió (≈1 vez por mes). Si el Pi está apagado, reintenta al otro día.
-        run: python scripts/volumen.py
+        run: .venv/bin/python scripts/volumen.py
       - name: Guardar cambios
         run: |
           git config user.name "github-actions[bot]"
