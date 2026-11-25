@@ -2,333 +2,535 @@
 <html lang="es-AR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Panorama nacional · Precios YPF</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-:root{--ink:#0b1524;--ink2:#26374d;--muted:#5b6b80;--line:#e6ebf4;--bg:#f4f6fb;--card:#fff;
---brand:#1747d6;--brand2:#3b6cf0;--up:#d6403a;--down:#0f9d76;
---sh:0 1px 2px #0b152410,0 10px 30px -12px #0b152426;--r:18px}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{font-family:'Schibsted Grotesk',system-ui,-apple-system,sans-serif;background:
-radial-gradient(1200px 600px at 85% -10%,#dbe6ff 0%,transparent 60%),radial-gradient(900px 500px at -10% 0%,#e6f6f1 0%,transparent 55%),var(--bg);
-color:var(--ink);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;padding-bottom:48px}
-a{color:inherit}
-.top{position:sticky;top:0;z-index:30;background:#0b1524;background-image:linear-gradient(100deg,#0b1524,#132a52 55%,#0b1524);
-color:#fff;display:flex;align-items:center;gap:14px;padding:12px 22px;box-shadow:0 6px 24px -10px #0b152480}
-.top .back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:13px;font-weight:700;
-background:#ffffff1a;border:1px solid #ffffff2e;padding:8px 14px;border-radius:999px;transition:.2s;white-space:nowrap}
-.top .back:hover{background:#ffffff2e}
-.top .ttl{font-weight:800;letter-spacing:-.02em;font-size:15px}
-.top .ttl small{display:block;font-weight:500;font-size:11px;opacity:.6;letter-spacing:0}
-.top .sp{flex:1}
-.top .when{font-size:12.5px;opacity:.75}
-.dot{width:8px;height:8px;border-radius:50%;background:#38d39f;box-shadow:0 0 0 4px #38d39f33;flex:none}
-.wrap{max-width:1180px;margin:0 auto;padding:26px 22px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
-.hero{padding:24px 28px;position:relative;overflow:hidden}
-.hero:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:linear-gradient(180deg,var(--brand),#0f9d76)}
-.hero h1{margin:0;font-size:27px;font-weight:800;letter-spacing:-.03em}
-.hero .sub{margin-top:6px;color:var(--muted);font-size:13.5px}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:16px}
-.kpi{padding:16px 18px;border-radius:var(--r);background:#fff;border:1px solid var(--line);box-shadow:var(--sh)}
-.kpi .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.kpi .v{font-size:25px;font-weight:800;letter-spacing:-.035em;margin-top:6px;line-height:1.05}
-.kpi .d{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.4}
-.kpi .v.up{color:var(--up)}.kpi .v.down{color:var(--down)}
-.segwrap{display:flex;align-items:center;gap:14px;margin:26px 0 14px;flex-wrap:wrap}
-.seg{display:flex;gap:4px;background:#eaeff8;border:1px solid var(--line);padding:4px;border-radius:14px;flex-wrap:wrap}
-.seg button{font:inherit;font-size:13.5px;font-weight:700;color:var(--muted);background:none;border:0;padding:9px 16px;
-border-radius:11px;cursor:pointer;transition:.18s;white-space:nowrap}
-.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px #0b152426,0 4px 14px -6px #0b152433}
-.hint{font-size:12.5px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:1fr 322px;gap:16px;align-items:start}
-.panel{padding:20px 22px 16px}
-.panel h2{margin:0;font-size:15.5px;font-weight:800;letter-spacing:-.01em}
-.panel .h2sub{font-size:12px;color:var(--muted);margin-top:3px}
-.ph{display:flex;align-items:flex-start;gap:14px}
-.ph .sp{flex:1}
-.chips{display:flex;gap:6px;background:#eaeff8;padding:4px;border-radius:12px;flex-wrap:wrap}
-.chips button{font:inherit;font-size:12.5px;font-weight:700;color:var(--muted);background:none;border:0;padding:7px 11px;
-border-radius:9px;cursor:pointer;transition:.16s}
-.chips button.on{background:#fff;color:var(--brand);box-shadow:0 1px 3px #0b152426}
-.chart{margin-top:12px;position:relative}
-.chart svg{display:block;width:100%;height:auto;overflow:visible}
-.ctip{position:absolute;pointer-events:none;background:#0b1524;color:#fff;border-radius:10px;padding:8px 11px;font-size:12px;
-box-shadow:0 10px 24px -8px #0b152480;opacity:0;transform:translate(-50%,-118%);transition:opacity .12s;white-space:nowrap;z-index:5}
-.ctip b{display:block;font-size:14.5px;font-weight:800;letter-spacing:-.02em}
-.ctip span{opacity:.65;font-size:11px}
-.ctip.show{opacity:1}
-.lgd{display:flex;gap:16px;margin-top:10px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
-.lgd i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
-.lgd .band{width:14px;height:9px;border-radius:3px;background:#1747d622;border:1px solid #1747d633;vertical-align:middle}
-.cfoot{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
-.rank{display:grid;gap:5px;margin-top:10px;max-height:392px;overflow:auto;padding-right:4px}
-.rank .rw{display:grid;grid-template-columns:22px 1fr auto;gap:9px;align-items:center;font-size:12.5px}
-.rank .rw .p{color:var(--muted);font-size:11px;text-align:right;font-weight:700}
-.rank .rw .n{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rank .rw .b{grid-column:2;height:6px;border-radius:3px;background:#eef2f8;position:relative;overflow:hidden}
-.rank .rw .b i{position:absolute;inset:0 auto 0 0;border-radius:3px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-th:first-child,td:first-child{text-align:left;font-weight:700}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
-tbody tr:hover{background:#f7f9fd}
-td.mx{border-radius:8px;font-weight:700}
-.foot{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.foot .m{padding:15px 17px;border-radius:14px;background:#fff;border:1px solid var(--line)}
-.foot .m .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-.foot .m .v{font-size:17px;font-weight:800;margin-top:5px;letter-spacing:-.02em}
-.foot .m .v small{font-weight:600;font-size:12px;color:var(--muted);letter-spacing:0}
-.notes{margin-top:14px;font-size:12px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:12px}
-.notes b{color:var(--ink2)}
-.nodata{padding:70px 0;text-align:center;color:#5b6b80;font-size:13.5px}
-.credit{margin:22px 0 0;text-align:center;font-size:12px;color:var(--muted)}
-@media(max-width:960px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.foot{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .lgd {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .lgd span { display: inline-flex; align-items: center; gap: 6px; }
+  .lgd i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; }
+  .lgd .band {
+    width: 14px;
+    height: 10px;
+    border-radius: 3px;
+    background: rgba(23, 71, 214, 0.14);
+    border: 1px solid rgba(23, 71, 214, 0.25);
+  }
+
+  /* Province Ranking */
+  .rank-list {
+    display: grid;
+    gap: 4px;
+    margin-top: 12px;
+    max-height: 410px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .rank-row {
+    display: grid;
+    grid-template-columns: 26px 1fr auto;
+    gap: 4px 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.12s;
+  }
+  .rank-row:hover { background: var(--surface-2); }
+  .rank-pos {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--muted);
+    text-align: right;
+  }
+  .rank-name {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .rank-val {
+    font-size: 13px;
+    font-weight: 800;
+    text-align: right;
+  }
+  .rank-bar-wrap {
+    grid-column: 2;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .rank-bar-wrap i {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+  }
+  .rank-cnt {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* Sortable Matrix Table */
+  .table-scroll {
+    overflow-x: auto;
+    margin-top: 14px;
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+  }
+  table.mx-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+  }
+  .mx-table th, .mx-table td {
+    padding: 10px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--line-soft);
+    white-space: nowrap;
+  }
+  .mx-table tr:last-child td { border-bottom: 0; }
+  .mx-table th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    background: var(--surface-hover);
+    cursor: pointer;
+    user-select: none;
+  }
+  .mx-table th:hover { color: var(--ink); }
+  .mx-table th.sorted { color: var(--brand); }
+  .mx-table th:first-child, .mx-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    text-align: left;
+    font-weight: 700;
+    background: var(--surface);
+    border-right: 1px solid var(--line-soft);
+  }
+  .mx-table th:first-child { background: var(--surface-hover); z-index: 3; }
+  .mx-table tbody tr:hover td:first-child { background: var(--surface-hover); }
+  .mx-table tbody tr:hover td { background: var(--surface-hover); }
+  .mx-table td a.prov-lnk {
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .mx-table td a.prov-lnk:hover { color: var(--brand); text-decoration: underline; }
+  .mx-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 12.5px;
+  }
+
+  @media (max-width: 960px) {
+    .dash-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="top">
-  <a class="back" href="index.html">← Volver al mapa</a>
-  <div class="ttl">Panorama nacional<small>Precios YPF en Argentina</small></div>
-  <div class="sp"></div>
-  <span class="when" id="when">Cargando…</span>
-  <span class="dot" title="Datos vigentes"></span>
-</div>
+<div id="topbar-root"></div>
 
-<div class="wrap">
-  <section class="card hero">
-    <h1>El precio de la nafta en Argentina</h1>
-    <div class="sub" id="sub">—</div>
+<main class="page-wrap">
+  <section class="card hero-card">
+    <div>
+      <span class="hero-eyebrow">Panorama nacional</span>
+      <h1>El precio del combustible en Argentina</h1>
+      <div class="hero-desc" id="sub">Cargando datos nacionales…</div>
+    </div>
+    <a class="btn" href="ranking.html">Ver ranking de ventas →</a>
   </section>
 
-  <div class="kpis">
-    <div class="kpi"><div class="k">Mediana país</div><div class="v" id="k1">—</div><div class="d" id="d1">—</div></div>
-    <div class="kpi"><div class="k">Promedio</div><div class="v" id="k2">—</div><div class="d">sobre las estaciones con precio</div></div>
-    <div class="kpi"><div class="k">Más barata</div><div class="v down" id="k3">—</div><div class="d" id="d3">—</div></div>
-    <div class="kpi"><div class="k">Más cara</div><div class="v up" id="k4">—</div><div class="d" id="d4">—</div></div>
-    <div class="kpi"><div class="k">Brecha</div><div class="v" id="k5">—</div><div class="d">entre la más barata y la más cara</div></div>
-  </div>
+  <section class="kpi-grid cols-5" aria-label="Indicadores nacionales">
+    <div class="kpi"><div class="kpi-label">Mediana país</div><div class="kpi-val" id="k1">—</div><div class="kpi-sub" id="d1">—</div></div>
+    <div class="kpi"><div class="kpi-label">Promedio</div><div class="kpi-val" id="k2">—</div><div class="kpi-sub">sobre estaciones con precio</div></div>
+    <div class="kpi"><div class="kpi-label">Más barata</div><div class="kpi-val down" id="k3">—</div><div class="kpi-sub" id="d3">—</div></div>
+    <div class="kpi"><div class="kpi-label">Más cara</div><div class="kpi-val up" id="k4">—</div><div class="kpi-sub" id="d4">—</div></div>
+    <div class="kpi"><div class="kpi-label">Brecha</div><div class="kpi-val" id="k5">—</div><div class="kpi-sub">entre mínima y máxima</div></div>
+  </section>
 
-  <div class="segwrap">
+  <div class="toolbar-row">
     <div class="seg" id="seg" role="tablist" aria-label="Combustible"></div>
-    <div class="hint">Elegí el combustible: todo el panorama se recalcula.</div>
+    <span class="panel-sub" style="margin:0">Elegí el combustible para recalcular todo el panorama.</span>
   </div>
 
-  <div class="grid">
+  <div class="dash-grid">
     <section class="card panel">
-      <div class="ph">
-        <div class="sp">
+      <div class="panel-head">
+        <div>
           <h2 id="chtitle">Evolución del precio en el país</h2>
-          <div class="h2sub" id="chsub">—</div>
+          <div class="panel-sub" id="chsub">—</div>
         </div>
         <div class="chips" id="chips" role="tablist" aria-label="Período"></div>
       </div>
-      <div class="chart" id="chart"><div class="ctip" id="tip"></div></div>
-      <div class="lgd"><span><i style="background:#1747d6"></i>Mediana</span><span><i style="background:#8798ad;background-image:repeating-linear-gradient(90deg,#8798ad 0 5px,transparent 5px 9px)"></i>Promedio</span><span><i class="band"></i>Mín–máx</span></div>
+      <div class="chart-box" id="chart"><div class="ctip" id="tip"></div></div>
+      <div class="lgd">
+        <span><i style="background:#1747d6"></i>Mediana</span>
+        <span><i style="background:#94a3b8;background-image:repeating-linear-gradient(90deg,#94a3b8 0 5px,transparent 5px 9px)"></i>Promedio</span>
+        <span><i class="band"></i>Rango mín–máx</span>
+      </div>
       <div class="cfoot"><span id="cfootL">—</span><span id="cfootR">—</span></div>
     </section>
 
     <aside class="card panel">
-      <h2>Provincias, de más barata a más cara</h2>
-      <div class="h2sub">Mediana del <span id="rngfuel">Súper</span> por provincia · tocá una para ver sus estaciones</div>
-      <div class="rank" id="rank"></div>
+      <div class="panel-head">
+        <div>
+          <h2>Provincias más baratas</h2>
+          <div class="panel-sub">Mediana de <span id="rngfuel">Súper</span> · tocá para ver en el mapa</div>
+        </div>
+      </div>
+      <div class="rank-list" id="rank"></div>
     </aside>
   </div>
 
   <section class="card panel" style="margin-top:16px">
-    <div class="ph"><div class="sp">
-      <h2>Comparación por provincia y combustible</h2>
-      <div class="h2sub">Mediana por litro. Verde = más barata de la columna, rojo = más cara.</div>
-    </div></div>
-    <div style="overflow:auto;margin-top:10px"><table id="mx"><tbody></tbody></table></div>
+    <div class="panel-head">
+      <div>
+        <h2>Comparación por provincia y combustible</h2>
+        <div class="panel-sub">Mediana por litro. Tocá cualquier columna para ordenar · verde = más barata, rojo = más cara.</div>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="mx-table" id="mx"><tbody></tbody></table>
+    </div>
   </section>
 
   <section class="card panel" style="margin-top:16px">
-    <div class="ph"><div class="sp">
-      <h2>Distribución de precios</h2>
-      <div class="h2sub" id="distsub">—</div>
-    </div></div>
-    <div class="chart" id="dist"></div>
+    <div class="panel-head">
+      <div>
+        <h2>Distribución de precios</h2>
+        <div class="panel-sub" id="distsub">—</div>
+      </div>
+    </div>
+    <div class="chart-box" id="dist"><div class="ctip" id="dtip"></div></div>
   </section>
 
-  <div class="foot">
-    <div class="m"><div class="k">Actualizado</div><div class="v" id="m1">—</div></div>
+  <section class="foot-meta">
+    <div class="m"><div class="k">Última actualización</div><div class="v" id="m1">—</div></div>
     <div class="m"><div class="k">Vigencia del precio</div><div class="v" id="m2">—</div></div>
     <div class="m"><div class="k">Series acumuladas</div><div class="v" id="m3">—</div></div>
-  </div>
+  </section>
 
   <p class="credit">Fuente: API de transparencia fiscal de YPF · las series nacionales se acumulan una fila por día</p>
-</div>
+</main>
 
+<script src="shared.js"></script>
 <script>
-const FUELS={NS:['Nafta Súper','Súper'],IN:['Infinia','Infinia'],EURO:['Euro Diésel','Euro'],D500:['Diésel 500','D500']};
-const RANGE=[['30d','30 días','30 días'],['3m','3 meses','3 meses'],['6m','6 meses','6 meses'],['1y','1 año','1 año'],['ytd','YTD','año en curso']];
-const $=s=>document.querySelector(s);
-const money=n=>'$'+new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(n);
-const money2=n=>'$'+new Intl.NumberFormat('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
-const pct=n=>(n>0?'+':'')+n.toFixed(1).replace('.',',')+'%';
-const f2=d=>d.split('-').reverse().join('/');
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const DAY=864e5,T=d=>Date.parse(d+'T12:00:00'),iso=t=>new Date(t).toISOString().slice(0,10);
-const med=a=>{if(!a.length)return null;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
+(() => {
+  const { FUELS, FKEYS, RANGE, $, money, money2, pct, f2, esc, DAY, T, iso, med, fmtDateLong, fmtDateShort, renderTopbar } = window.YPF;
 
-let ST=[],SERIE=[],HOY='',VER='',fuel='NS',range='30d';
-const FUELKEYS=Object.keys(FUELS);
-const PROVS=[];
+  $('#topbar-root').innerHTML = renderTopbar('argentina',
+    `<div class="topbar-meta"><span class="live-dot"></span><span id="when">Cargando…</span></div>`
+  );
 
-const porProv=()=>{const o={};for(const e of ST){for(const k of FUELKEYS){const p=e.n[k];if(p!=null)(o[e.p]=o[e.p]||{})[k]=(o[e.p][k]||[]).concat(p)}}return o};
-const serieFuel=()=>SERIE.filter(r=>r.p===fuel).sort((a,b)=>a.f<b.f?-1:1);
-function bounds(r){
-  const hoy=T(HOY);let from;
-  if(r==='30d')from=hoy-30*DAY;else if(r==='3m')from=hoy-91*DAY;else if(r==='6m')from=hoy-182*DAY;
-  else if(r==='1y')from=hoy-365*DAY;else from=Date.parse(HOY.slice(0,4)+'-01-01T12:00:00');
-  return[from,hoy];
-}
+  let ST = [], SERIE = [], HOY = '', fuel = 'NS', range = '30d', sortCol = 'NS', sortAsc = true;
 
-/* ── gráfico nacional ── */
-function drawChart(){
-  const s=serieFuel(),[from,to]=bounds(range);
-  const pts=s.filter(r=>T(r.f)>=from),box=$('#chart'),W=760,H=286,L=60,R=16,TP=18,B=34,base=H-B;
-  if(pts.length<1){
-    box.innerHTML='<div class="ctip" id="tip"></div><div class="nodata">Sin datos en este período.<br><small>La serie nacional se acumula una fila por día.</small></div>';
-    $('#cfootL').textContent='Sin datos en el período.';$('#cfootR').textContent='';return;
+  const porProv = () => {
+    const o = {};
+    for (const e of ST) {
+      for (const k of FKEYS) {
+        const p = e.n[k];
+        if (p != null) (o[e.p] = o[e.p] || {})[k] = (o[e.p][k] || []).concat(p);
+      }
+    }
+    return o;
+  };
+
+  const serieFuel = () => SERIE.filter(r => r.p === fuel).sort((a, b) => a.f < b.f ? -1 : 1);
+
+  function bounds(r) {
+    const hoy = T(HOY);
+    let from;
+    if (r === '30d') from = hoy - 30 * DAY;
+    else if (r === '3m') from = hoy - 91 * DAY;
+    else if (r === '6m') from = hoy - 182 * DAY;
+    else if (r === '1y') from = hoy - 365 * DAY;
+    else from = Date.parse(HOY.slice(0, 4) + '-01-01T12:00:00');
+    return [from, hoy];
   }
-  const ini=pts[0],fin=pts[pts.length-1];
-  const ymin=Math.min(...pts.map(r=>Math.min(r.min,ini.med*(0.98)))),ymax=Math.max(...pts.map(r=>Math.max(r.max,ini.med*1.02)));
-  const pad=(ymax-ymin)*.12||10,lo=ymin-pad,hi=ymax+pad;
-  const X=t=>(L+(t-from)/((to-from)||DAY)*(W-L-R)).toFixed(1);
-  const Y=v=>(TP+(hi-v)/(hi-lo)*(base-TP)).toFixed(1);
-  const line=k=>pts.map((r,i)=>(i?'L':'M')+X(T(r.f))+','+Y(r[k])).join('');
-  const band=`M${X(T(pts[0].f))},${Y(pts[0].max)}`+pts.slice(1).map(r=>`L${X(T(r.f))},${Y(r.max)}`).join('')
-    +pts.slice().reverse().map(r=>`L${X(T(r.f))},${Y(r.min)}`).join('')+'Z';
-  let g='';
-  for(let i=0;i<=4;i++){const v=hi-(hi-lo)*i/4,y=Y(v);
-    g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#eef2f8"/>`+
-       `<text x="${L-10}" y="${(+y+3.5).toFixed(1)}" text-anchor="end" font-size="10.5" fill="#8798ad">${money(Math.round(v))}</text>`;}
-  for(let i=0;i<=4;i++){const t=from+(to-from)*i/4,x=X(t);
-    g+=`<text x="${x}" y="${H-10}" text-anchor="${i===0?'start':i===4?'end':'middle'}" font-size="10.5" fill="#8798ad">${f2(iso(t))}</text>`;}
-  const ch=(fin.med/ini.med-1)*100,col=ch>0.05?'#d6403a':ch<-0.05?'#0f9d76':'#5b6b80';
-  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución nacional">
-    <path d="${band}" fill="#1747d614"/>
-    ${g}
-    <path d="${line('med')}" fill="none" stroke="${col}" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="${line('avg')}" fill="none" stroke="#8798ad" stroke-width="1.6" stroke-dasharray="5 4"/>
-    <line id="cross" x1="0" x2="0" y1="${TP}" y2="${base}" stroke="#0b1524" stroke-opacity=".18" stroke-dasharray="3 3" opacity="0"/>
-    <circle id="cdot" r="5.5" fill="#fff" stroke="${col}" stroke-width="3" opacity="0"/>
-    ${pts.map(r=>`<circle cx="${X(T(r.f))}" cy="${Y(r.med)}" r="4" fill="${col}" stroke="#fff" stroke-width="2"/>`).join('')}
-    <rect id="hit" x="${L}" y="${TP}" width="${W-L-R}" height="${base-TP}" fill="transparent" style="cursor:crosshair"/>
-  </svg><div class="ctip" id="tip"></div>`;
-  $('#cfootL').innerHTML=`Mediana desde ${f2(ini.f)}: <b class="${ch>0?'up':ch<-0.05?'down':''}">${pct(ch)}</b> &nbsp;(${money2(ini.med)} → ${money2(fin.med)})`;
-  $('#cfootR').innerHTML=`${pts.length} ${pts.length===1?'día':'días'} · ${ini.e} estaciones · brecha ${money(ini.min)}–${money(ini.max)}`;
-  const svg=box.querySelector('svg'),cross=box.querySelector('#cross'),dot=box.querySelector('#cdot'),tip=box.querySelector('#tip');
-  box.querySelector('#hit').addEventListener('pointermove',e=>{
-    const r=svg.getBoundingClientRect(),k=W/r.width,x=Math.max(L,Math.min(W-R,(e.clientX-r.left)*k));
-    const t=from+(x-L)/(W-L-R)*(to-from);let i=0;pts.forEach((p,j)=>{if(T(p.f)<=t)i=j});
-    const px=X(T(pts[i].f)),py=Y(pts[i].med);
-    cross.setAttribute('x1',px);cross.setAttribute('x2',px);cross.setAttribute('opacity','1');
-    dot.setAttribute('cx',px);dot.setAttribute('cy',py);dot.setAttribute('opacity','1');
-    tip.innerHTML=`<b>${money2(pts[i].med)}</b><span>${f2(pts[i].f)} · mín ${money(pts[i].min)} / máx ${money(pts[i].max)}</span>`;
-    tip.style.left=(+px)/k+'px';tip.style.top=(+py)*(r.height/H)+'px';tip.classList.add('show');
+
+  /* ── Gráfico nacional ── */
+  function drawChart() {
+    const s = serieFuel(), [from, to] = bounds(range);
+    const pts = s.filter(r => T(r.f) >= from), box = $('#chart');
+    const W = 760, H = 280, L = 60, R = 16, TP = 18, B = 32, base = H - B;
+    if (pts.length < 1) {
+      box.innerHTML = '<div class="ctip" id="tip"></div><div class="nodata">Sin datos en este período.<br><small>La serie nacional se acumula una fila por día.</small></div>';
+      $('#cfootL').textContent = 'Sin datos en el período.';
+      $('#cfootR').textContent = '';
+      return;
+    }
+    const ini = pts[0], fin = pts[pts.length - 1];
+    const ymin = Math.min(...pts.map(r => Math.min(r.min, ini.med * 0.98)));
+    const ymax = Math.max(...pts.map(r => Math.max(r.max, ini.med * 1.02)));
+    const pad = (ymax - ymin) * 0.12 || 10, lo = ymin - pad, hi = ymax + pad;
+    const X = t => (L + (t - from) / ((to - from) || DAY) * (W - L - R)).toFixed(1);
+    const Y = v => (TP + (hi - v) / (hi - lo) * (base - TP)).toFixed(1);
+    const line = k => pts.map((r, i) => (i ? 'L' : 'M') + X(T(r.f)) + ',' + Y(r[k])).join('');
+    const band = `M${X(T(pts[0].f))},${Y(pts[0].max)}` + pts.slice(1).map(r => `L${X(T(r.f))},${Y(r.max)}`).join('')
+      + pts.slice().reverse().map(r => `L${X(T(r.f))},${Y(r.min)}`).join('') + 'Z';
+
+    let g = '';
+    for (let i = 0; i <= 4; i++) {
+      const v = hi - (hi - lo) * i / 4, y = Y(v);
+      g += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="#eef2f6"/>` +
+           `<text x="${L - 10}" y="${(+y + 3.5).toFixed(1)}" text-anchor="end" font-size="10.5" fill="#94a3b8">${money(Math.round(v))}</text>`;
+    }
+    for (let i = 0; i <= 4; i++) {
+      const t = from + (to - from) * i / 4, x = X(t);
+      g += `<text x="${x}" y="${H - 10}" text-anchor="${i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}" font-size="10.5" fill="#94a3b8">${f2(iso(t))}</text>`;
+    }
+
+    const ch = (fin.med / ini.med - 1) * 100;
+    const col = ch > 0.05 ? '#dc2626' : ch < -0.05 ? '#059669' : '#1747d6';
+
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución nacional">
+      <path d="${band}" fill="rgba(23,71,214,0.08)"/>
+      ${g}
+      <path d="${line('med')}" fill="none" stroke="${col}" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="${line('avg')}" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="5 4"/>
+      <line id="cross" x1="0" x2="0" y1="${TP}" y2="${base}" stroke="#0f172a" stroke-opacity=".2" stroke-dasharray="3 3" opacity="0"/>
+      <circle id="cdot" r="5.5" fill="#fff" stroke="${col}" stroke-width="3" opacity="0"/>
+      ${pts.map(r => `<circle cx="${X(T(r.f))}" cy="${Y(r.med)}" r="3.8" fill="${col}" stroke="#fff" stroke-width="1.8"/>`).join('')}
+      <rect id="hit" x="${L}" y="${TP}" width="${W - L - R}" height="${base - TP}" fill="transparent" style="cursor:crosshair"/>
+    </svg><div class="ctip" id="tip"></div>`;
+
+    $('#cfootL').innerHTML = `Mediana desde ${f2(ini.f)}: <b class="${ch > 0 ? 'up' : ch < -0.05 ? 'down' : ''}">${pct(ch)}</b> (${money2(ini.med)} → ${money2(fin.med)})`;
+    $('#cfootR').innerHTML = `${pts.length} ${pts.length === 1 ? 'día' : 'días'} · ${ini.e} estaciones · rango ${money(ini.min)}–${money(ini.max)}`;
+
+    const svg = box.querySelector('svg'), cross = box.querySelector('#cross'), dot = box.querySelector('#cdot'), tip = box.querySelector('#tip');
+    box.querySelector('#hit').addEventListener('pointermove', e => {
+      const r = svg.getBoundingClientRect(), k = W / r.width, x = Math.max(L, Math.min(W - R, (e.clientX - r.left) * k));
+      const t = from + (x - L) / (W - L - R) * (to - from);
+      let i = 0; pts.forEach((p, j) => { if (T(p.f) <= t) i = j; });
+      const px = X(T(pts[i].f)), py = Y(pts[i].med);
+      cross.setAttribute('x1', px); cross.setAttribute('x2', px); cross.setAttribute('opacity', '1');
+      dot.setAttribute('cx', px); dot.setAttribute('cy', py); dot.setAttribute('opacity', '1');
+      tip.innerHTML = `<b>${money2(pts[i].med)}</b><span>${f2(pts[i].f)} · mín ${money(pts[i].min)} / máx ${money(pts[i].max)}</span>`;
+      tip.style.left = (+px) / k + 'px';
+      tip.style.top = (+py) * (r.height / H) + 'px';
+      tip.classList.add('show');
+    });
+    box.addEventListener('pointerleave', () => {
+      cross.setAttribute('opacity', '0'); dot.setAttribute('opacity', '0'); tip.classList.remove('show');
+    });
+  }
+
+  /* ── Ranking de provincias (clickable -> mapa filtrado) ── */
+  function drawRank() {
+    const p = porProv();
+    const filas = Object.entries(p)
+      .map(([prov, v]) => [prov, med(v[fuel] || []), v[fuel] ? v[fuel].length : 0])
+      .filter(r => r[1] != null)
+      .sort((a, b) => a[1] - b[1]);
+    if (!filas.length) {
+      $('#rank').innerHTML = '<div class="nodata" style="padding:24px 0">Sin datos.</div>';
+      return;
+    }
+    const mn = filas[0][1], mx = filas[filas.length - 1][1], span = (mx - mn) || 1;
+    $('#rank').innerHTML = filas.map(([prov, v, n], i) => {
+      const t = (v - mn) / span;
+      const col = t < .5 ? `hsl(${156 - t * 140}, 62%, 42%)` : `hsl(${80 - (t - .5) * 80}, 78%, 48%)`;
+      const w = 14 + t * 86;
+      return `<a class="rank-row" href="index.html?prov=${encodeURIComponent(prov)}&f=${encodeURIComponent(fuel)}" title="Ver ${esc(prov)} en el mapa">
+        <span class="rank-pos">${i + 1}°</span>
+        <span class="rank-name">${esc(prov)}</span>
+        <span class="rank-val">${money(v)}</span>
+        <span class="rank-bar-wrap"><i style="width:${w.toFixed(1)}%;background:${col}"></i></span>
+        <span class="rank-cnt">${n} est.</span>
+      </a>`;
+    }).join('');
+  }
+
+  /* ── Matriz provincia × combustible (ordenable) ── */
+  function drawMatrix() {
+    const p = porProv();
+    const provs = Object.keys(p).sort((a, b) => {
+      if (sortCol === 'prov') return sortAsc ? a.localeCompare(b, 'es') : b.localeCompare(a, 'es');
+      const va = med(p[a][sortCol] || []), vb = med(p[b][sortCol] || []);
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      return sortAsc ? va - vb : vb - va;
+    });
+    const cols = {};
+    for (const k of FKEYS) {
+      const v = provs.map(x => med(p[x][k] || [])).filter(x => x != null);
+      cols[k] = [Math.min(...v), Math.max(...v)];
+    }
+    const arrow = col => sortCol === col ? (sortAsc ? ' ↑' : ' ↓') : '';
+    let h = `<thead><tr>
+      <th data-col="prov" class="${sortCol === 'prov' ? 'sorted' : ''}">Provincia${arrow('prov')}</th>
+      ${FKEYS.map(k => `<th data-col="${k}" class="${sortCol === k ? 'sorted' : ''}">${FUELS[k][1]}${arrow(k)}</th>`).join('')}
+    </tr></thead><tbody>`;
+
+    for (const x of provs) {
+      h += `<tr><td><a class="prov-lnk" href="index.html?prov=${encodeURIComponent(x)}&f=${encodeURIComponent(fuel)}">${esc(x)}</a></td>` +
+        FKEYS.map(k => {
+          const v = med(p[x][k] || []);
+          if (v == null) return '<td>–</td>';
+          const [mn, mx] = cols[k], t = (v - mn) / ((mx - mn) || 1);
+          const bg = t < .5 ? `rgba(5,150,105,${0.10 + (.5 - t) * 0.42})` : `rgba(220,38,38,${0.10 + (t - .5) * 0.42})`;
+          return `<td><span class="mx-pill" style="background:${bg}">${money(v)}</span></td>`;
+        }).join('') + '</tr>';
+    }
+    $('#mx').innerHTML = h + '</tbody>';
+  }
+
+  $('#mx').onclick = e => {
+    const th = e.target.closest('th[data-col]');
+    if (!th) return;
+    const col = th.dataset.col;
+    if (sortCol === col) sortAsc = !sortAsc;
+    else { sortCol = col; sortAsc = true; }
+    drawMatrix();
+  };
+
+  /* ── Histograma de distribución con tooltip interactivo ── */
+  function drawDist() {
+    const v = ST.map(e => e.n[fuel]).filter(x => x != null).sort((a, b) => a - b);
+    const box = $('#dist');
+    if (!v.length) {
+      box.innerHTML = '<div class="ctip" id="dtip"></div><div class="nodata">Sin datos.</div>';
+      return;
+    }
+    const bin = 25, mn = Math.floor(v[0] / bin) * bin, mx = Math.ceil(v[v.length - 1] / bin) * bin;
+    const nb = Math.max(1, Math.round((mx - mn) / bin)), cnt = new Array(nb).fill(0);
+    v.forEach(x => cnt[Math.min(nb - 1, Math.floor((x - mn) / bin))]++);
+    const cmax = Math.max(...cnt), m = med(v);
+    const W = 760, H = 215, L = 44, R = 14, TP = 16, B = 30, base = H - B, bw = (W - L - R) / nb;
+
+    let g = '';
+    for (let i = 0; i <= 3; i++) {
+      const c = Math.round(cmax * i / 3), y = TP + (base - TP) * (1 - i / 3);
+      g += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="#eef2f6"/><text x="${L - 8}" y="${y + 3.5}" text-anchor="end" font-size="10.5" fill="#94a3b8">${c}</text>`;
+    }
+    const bars = cnt.map((c, i) => {
+      const hh = c / cmax * (base - TP), x = L + i * bw, mid = mn + i * bin + bin / 2;
+      const fill = mid < m ? '#059669' : mid > m + bin ? '#1747d6' : '#3b82f6';
+      return `<rect class="dbar" data-i="${i}" x="${(x + 1.2).toFixed(1)}" y="${(base - hh).toFixed(1)}" width="${Math.max(2, bw - 2.4).toFixed(1)}" height="${hh.toFixed(1)}" rx="3" fill="${fill}" opacity="${mid > m ? 0.65 : 0.85}" style="cursor:pointer"/>`;
+    }).join('');
+
+    for (let i = 0; i <= 4; i++) {
+      const val = mn + (mx - mn) * i / 4, x = L + (W - L - R) * i / 4;
+      g += `<text x="${x}" y="${H - 10}" text-anchor="${i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}" font-size="10.5" fill="#94a3b8">${money(Math.round(val))}</text>`;
+    }
+    const xm = L + ((m - mn) / ((mx - mn) || 1)) * (W - L - R);
+
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Distribución de precios">${g}${bars}
+      <line x1="${xm}" x2="${xm}" y1="${TP}" y2="${base}" stroke="#0f172a" stroke-width="1.6" stroke-dasharray="4 3"/>
+      <text x="${xm}" y="${TP + 11}" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">mediana ${money(m)}</text>
+    </svg><div class="ctip" id="dtip"></div>`;
+
+    $('#distsub').innerHTML = `${v.length} estaciones con ${FUELS[fuel][0]} · ${cnt.filter(c => c).length} rangos de ${money(bin)}`;
+
+    const svg = box.querySelector('svg'), tip = box.querySelector('#dtip');
+    box.addEventListener('pointermove', ev => {
+      const bar = ev.target.closest('.dbar');
+      if (!bar) { tip.classList.remove('show'); return; }
+      const i = +bar.dataset.i, c = cnt[i];
+      const r = svg.getBoundingClientRect(), k = W / r.width;
+      const bx = (+bar.getAttribute('x') + +bar.getAttribute('width') / 2) / k;
+      const by = (+bar.getAttribute('y')) * (r.height / H);
+      tip.innerHTML = `<b>${c} ${c === 1 ? 'estación' : 'estaciones'}</b><span>${money(mn + i * bin)} – ${money(mn + (i + 1) * bin)}</span>`;
+      tip.style.left = bx + 'px';
+      tip.style.top = by + 'px';
+      tip.classList.add('show');
+    });
+    box.addEventListener('pointerleave', () => tip.classList.remove('show'));
+  }
+
+  /* ── KPIs ── */
+  function drawKpis() {
+    const v = ST.map(e => e.n[fuel]).filter(x => x != null).sort((a, b) => a - b);
+    if (!v.length) return;
+    const m = med(v), avg = v.reduce((a, b) => a + b, 0) / v.length, mn = v[0], mx = v[v.length - 1];
+    const bar = ST.find(e => e.n[fuel] === mn), car = ST.find(e => e.n[fuel] === mx);
+    $('#k1').textContent = money(m);
+    $('#d1').textContent = `sobre ${v.length} de ${ST.length} estaciones`;
+    $('#k2').textContent = money(avg);
+    $('#k3').textContent = money(mn);
+    $('#d3').textContent = bar ? `${bar.o} · ${bar.l}, ${bar.p}` : '—';
+    $('#k4').textContent = money(mx);
+    $('#d4').textContent = car ? `${car.o} · ${car.l}, ${car.p}` : '—';
+    $('#k5').textContent = `${money(mx - mn)} (${((mx / mn - 1) * 100).toFixed(1).replace('.', ',')}%)`;
+    $('#rngfuel').textContent = FUELS[fuel][1];
+    $('#chtitle').textContent = 'Evolución del ' + FUELS[fuel][0].toLowerCase() + ' en el país';
+    $('#chsub').textContent = `Mediana diaria, promedio y rango mín–máx · hasta ${f2(HOY)}`;
+    $('#sub').innerHTML = `Mediana de ${FUELS[fuel][0]}: <b>${money(m)}</b>/L en ${v.length} estaciones · vigencia ${f2(HOY)}`;
+  }
+
+  function render() {
+    drawKpis();
+    drawChart();
+    drawRank();
+    drawMatrix();
+    drawDist();
+  }
+
+  $('#seg').innerHTML = FKEYS.map(k => `<button type="button" role="tab" data-k="${k}"${k === fuel ? ' class="on"' : ''}>${FUELS[k][0]}</button>`).join('');
+  $('#chips').innerHTML = RANGE.map(([k, l]) => `<button type="button" role="tab" data-r="${k}"${k === range ? ' class="on"' : ''}>${l}</button>`).join('');
+
+  $('#chips').onclick = e => {
+    const b = e.target.closest('button[data-r]');
+    if (!b) return;
+    range = b.dataset.r;
+    $('#chips').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.r === range));
+    drawChart();
+  };
+
+  $('#seg').onclick = e => {
+    const b = e.target.closest('button[data-k]');
+    if (!b) return;
+    fuel = b.dataset.k;
+    sortCol = fuel;
+    sortAsc = true;
+    $('#seg').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.k === fuel));
+    render();
+  };
+
+  Promise.all([
+    fetch('data.json?' + Date.now()).then(r => r.json()),
+    fetch('serie.json?' + Date.now()).then(r => r.ok ? r.json() : { nacional: [] }).catch(() => ({ nacional: [] }))
+  ]).then(([d, s]) => {
+    ST = d.estaciones || [];
+    SERIE = s.nacional || [];
+    HOY = (d.vigencia || '').slice(0, 10);
+    $('#when').textContent = d.actualizado ? fmtDateShort.format(new Date(d.actualizado)) : f2(HOY);
+    $('#m1').textContent = d.actualizado ? fmtDateLong.format(new Date(d.actualizado)) : f2(HOY);
+    $('#m2').textContent = f2(HOY);
+    const dias = new Set(SERIE.map(r => r.f)).size;
+    $('#m3').innerHTML = `${dias} <small>${dias === 1 ? 'día' : 'días'} de serie nacional</small>`;
+    render();
+  }).catch(() => {
+    $('#sub').textContent = 'No se pudieron cargar los datos. Serví la carpeta con: python -m http.server 8000';
   });
-  box.addEventListener('pointerleave',()=>{cross.setAttribute('opacity','0');dot.setAttribute('opacity','0');tip.classList.remove('show')});
-}
-
-/* ── ranking de provincias ── */
-function drawRank(){
-  const p=porProv(),filas=Object.entries(p).map(([prov,v])=>[prov,med(v[fuel]||[]),v[fuel]?v[fuel].length:0])
-    .filter(r=>r[1]!=null).sort((a,b)=>a[1]-b[1]);
-  if(!filas.length){$('#rank').innerHTML='<div style="font-size:12.5px;color:#5b6b80">Sin datos.</div>';return}
-  const mn=filas[0][1],mx=filas[filas.length-1][1],span=(mx-mn)||1;
-  $('#rank').innerHTML=filas.map(([prov,v,n],i)=>{
-    const t=(v-mn)/span,col=t<.5?`hsl(${160-t*160},55%,45%)`:`hsl(${85-(t-.5)*85},70%,48%)`;
-    const w=18+((v-mn)/span)*82;
-    return `<div class="rw"><span class="p">${i+1}°</span><span class="n" title="${esc(prov)}">${esc(prov)}</span>
-      <span class="p">${money(v)}</span><span class="b"><i style="width:${w}%;background:${col}"></i></span>
-      <span class="p">${n}</span></div>`;
-  }).join('');
-}
-
-/* ── matriz provincia × combustible ── */
-function drawMatrix(){
-  const p=porProv();
-  const provs=Object.keys(p).sort((a,b)=>(med(p[a][fuel]||[])||0)-(med(p[b][fuel]||[])||0));
-  const cols={};
-  for(const k of FUELKEYS){const v=provs.map(x=>med(p[x][k]||[])).filter(x=>x!=null);cols[k]=[Math.min(...v),Math.max(...v)];}
-  let h=`<thead><tr><th>Provincia</th>${FUELKEYS.map(k=>`<th>${FUELS[k][1]}</th>`).join('')}</tr></thead><tbody>`;
-  for(const x of provs){
-    h+=`<tr><td>${esc(x)}</td>`+FUELKEYS.map(k=>{
-      const v=med(p[x][k]||[]);if(v==null)return '<td>–</td>';
-      const[mn,mx]=cols[k],t=(v-mn)/((mx-mn)||1);
-      const bg=t<.5?`rgba(15,157,118,${.10+(.5-t)*.55})`:`rgba(214,64,58,${.10+(t-.5)*.55})`;
-      return `<td class="mx" style="background:${bg}">${money(v)}</td>`;
-    }).join('')+'</tr>';
-  }
-  $('#mx').innerHTML=h+'</tbody>';
-}
-
-/* ── distribución ── */
-function drawDist(){
-  const v=ST.map(e=>e.n[fuel]).filter(x=>x!=null).sort((a,b)=>a-b);
-  if(!v.length){$('#dist').innerHTML='<div class="nodata">Sin datos.</div>';return}
-  const bin=25,mn=Math.floor(v[0]/bin)*bin,mx=Math.ceil(v[v.length-1]/bin)*bin;
-  const nb=Math.max(1,Math.round((mx-mn)/bin)),cnt=new Array(nb).fill(0);
-  v.forEach(x=>cnt[Math.min(nb-1,Math.floor((x-mn)/bin))]++);
-  const cmax=Math.max(...cnt),m=med(v);
-  const W=760,H=210,L=44,R=14,TP=14,B=30,base=H-B,bw=(W-L-R)/nb;
-  let g='';
-  for(let i=0;i<=3;i++){const c=Math.round(cmax*i/3),y=TP+(base-TP)*(1-i/3);
-    g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#eef2f8"/><text x="${L-8}" y="${y+3.5}" text-anchor="end" font-size="10.5" fill="#8798ad">${c}</text>`;}
-  const bars=cnt.map((c,i)=>{const hh=c/cmax*(base-TP),x=L+i*bw,mid=mn+i*bin+bin/2;
-    return `<rect x="${(x+1.2).toFixed(1)}" y="${(base-hh).toFixed(1)}" width="${(bw-2.4).toFixed(1)}" height="${hh.toFixed(1)}" rx="3"
-      fill="${mid<m?'#0f9d76':mid>m+bin?'#1747d6':'#3b6cf0'}" opacity="${mid>m?0.55:0.8}"><title>${money(mn+i*bin)}–${money(mn+(i+1)*bin)}: ${c} estaciones</title></rect>`});
-  for(let i=0;i<=4;i++){const val=mn+(mx-mn)*i/4,x=L+(W-L-R)*i/4;
-    g+=`<text x="${x}" y="${H-10}" text-anchor="${i===0?'start':i===4?'end':'middle'}" font-size="10.5" fill="#8798ad">${money(Math.round(val))}</text>`;}
-  const xm=L+((m-mn)/(mx-mn))*(W-L-R);
-  $('#dist').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Distribución de precios">${g}${bars.join('')}
-    <line x1="${xm}" x2="${xm}" y1="${TP}" y2="${base}" stroke="#0b1524" stroke-width="1.6" stroke-dasharray="4 3"/>
-    <text x="${xm}" y="${TP+11}" text-anchor="middle" font-size="11" font-weight="700" fill="#0b1524">mediana ${money(m)}</text></svg>`;
-  $('#distsub').innerHTML=`${v.length} estaciones con ${FUELS[fuel][0]} · ${cnt.filter(c=>c).length} rangos de ${money(bin)}`;
-}
-
-/* ── KPIs ── */
-function drawKpis(){
-  const v=ST.map(e=>e.n[fuel]).filter(x=>x!=null).sort((a,b)=>a-b);
-  if(!v.length)return;
-  const m=med(v),avg=v.reduce((a,b)=>a+b,0)/v.length,mn=v[0],mx=v[v.length-1];
-  const bar=ST.filter(e=>e.n[fuel]===mn)[0],car=ST.filter(e=>e.n[fuel]===mx)[0];
-  $('#k1').textContent=money(m);$('#d1').textContent=`sobre ${v.length} de ${ST.length} estaciones`;
-  $('#k2').textContent=money(avg);
-  $('#k3').textContent=money(mn);$('#d3').textContent=bar?`${bar.o} — ${bar.l}, ${bar.p}`:'—';
-  $('#k4').textContent=money(mx);$('#d4').textContent=car?`${car.o} — ${car.l}, ${car.p}`:'—';
-  $('#k5').textContent=money(mx-mn)+' ('+((mx/mn-1)*100).toFixed(1).replace('.',',')+'%)';
-  $('#rngfuel').textContent=FUELS[fuel][1];
-  $('#chtitle').textContent='Evolución del '+FUELS[fuel][0].toLowerCase()+' en el país';
-  $('#chsub').textContent=`Mediana diaria, promedio y rango mín–máx · hasta ${f2(HOY)}`;
-  $('#sub').innerHTML=`Mediana de ${FUELS[fuel][0]}: <b>${money(m)}</b> por litro en ${v.length} estaciones · vigencia ${f2(HOY)}`;
-}
-
-function render(){drawKpis();drawChart();drawRank();drawMatrix();drawDist()}
-$('#seg').innerHTML=FUELKEYS.map(k=>`<button role="tab" data-k="${k}"${k===fuel?' class="on"':''}>${FUELS[k][0]}</button>`).join('');
-$('#chips').innerHTML=RANGE.map(([k,l])=>`<button role="tab" data-r="${k}"${k===range?' class="on"':''}>${l}</button>`).join('');
-const setRange=k=>{range=k;$('#chips').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.r===range));render()};
-$('#chips').onclick=e=>{const b=e.target.closest('button[data-r]');if(b)setRange(b.dataset.r)};
-$('#seg').onclick=e=>{const b=e.target.closest('button[data-k]');if(!b)return;fuel=b.dataset.k;
-  $('#seg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.k===fuel));render()};
-const fmt=new Intl.DateTimeFormat('es-AR',{timeZone:'America/Argentina/Buenos_Aires',dateStyle:'long',timeStyle:'short'});
-Promise.all([fetch('data.json?'+Date.now()).then(r=>r.json()),fetch('serie.json?'+Date.now()).then(r=>r.ok?r.json():{nacional:[]}).catch(()=>({nacional:[]}))])
-.then(([d,s])=>{
-  ST=d.estaciones||[];SERIE=s.nacional||[];HOY=(d.vigencia||'').slice(0,10);VER=d.actualizado||'';
-  $('#when').textContent=d.actualizado?fmt.format(new Date(d.actualizado)):f2(HOY);
-  $('#m1').textContent=d.actualizado?fmt.format(new Date(d.actualizado)):f2(HOY);
-  $('#m2').textContent=f2(HOY);
-  const dias=new Set(SERIE.map(r=>r.f)).size;
-  $('#m3').innerHTML=dias+' <small>'+(dias===1?'día':'días')+' de serie nacional</small>';
-  render();
-}).catch(()=>{$('#sub').textContent='No se pudieron cargar los datos. Serví la carpeta: cd docs && python -m http.server 8000'});
+})();
 </script>
 </body>
 </html>

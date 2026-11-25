@@ -2,228 +2,1334 @@
 <html lang="es-AR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Precios YPF: dónde cargar más barato</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Precios YPF · Mapa de estaciones en Argentina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+<link rel="stylesheet" href="styles.css">
 <style>
-:root{--ink:#0e1b2c;--muted:#5b6b80;--line:#dde3ec;--bg:#f3f6fa;--brand:#1747d6;--s0:#0f9d76;--s1:#5fb24a;--s2:#e2b01c;--s3:#ee8a2b;--s4:#d6403a}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{font-family:'Schibsted Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--bg);display:grid;grid-template-columns:392px 1fr;font-variant-numeric:tabular-nums}
-aside{display:flex;flex-direction:column;min-height:0;background:#fff;border-right:1px solid var(--line)}
-#map{height:100%;min-height:0;background:#e8edf3}
-.head{padding:18px 20px 12px}
-h1{font-size:23px;font-weight:800;letter-spacing:-.025em;margin:0}
-.sub{font-size:13px;color:var(--muted);margin-top:3px}
-.sub.warn{color:#b3261e;font-weight:600}
-.natls{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.natl{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--brand);
-text-decoration:none;background:#e8efff;padding:7px 12px;border-radius:10px}
-.natl:hover{background:#dbe7ff}
-.ctrl{padding:0 20px 14px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
-.seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg);border-radius:10px;padding:3px;position:relative}
-.seg input{position:absolute;opacity:0;pointer-events:none}
-.seg label{text-align:center;padding:8px 0;font-size:12px;font-weight:700;border-radius:8px;cursor:pointer;color:var(--muted);white-space:nowrap}
-.seg input:checked+label{background:#fff;color:var(--ink);box-shadow:0 1px 3px #0e1b2c26}
-.seg input:focus-visible+label{outline:2px solid var(--brand)}
-.row{display:flex;gap:8px}
-input[type=search],select{flex:1;min-width:0;font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
-input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
-.btn{font:inherit;font-size:14px;font-weight:700;padding:9px 12px;border-radius:10px;border:0;background:var(--brand);color:#fff;cursor:pointer;white-space:nowrap}
-.chk{font-size:13px;color:var(--muted);display:flex;gap:7px;align-items:center}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 20px 4px}
-.stats div{font-size:12px;color:var(--muted)}
-.stats b{display:block;font-size:19px;color:var(--ink);letter-spacing:-.01em}
-.legend{padding:8px 20px 12px;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line)}
-.bar{height:7px;border-radius:4px;background:linear-gradient(90deg,var(--s0),var(--s1),var(--s2),var(--s3),var(--s4));margin-bottom:4px}
-.bar+div{display:flex;justify-content:space-between}
-.list{overflow:auto;flex:1;min-height:0}
-.it{display:grid;grid-template-columns:1fr auto;gap:2px 12px;width:100%;text-align:left;font:inherit;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 20px;cursor:pointer;color:inherit}
-.it:hover,.it:focus-visible{background:var(--bg)}
-.it .nm{font-weight:700;font-size:14px}.it .pc{font-weight:800;font-size:16px;text-align:right}
-.it .ad,.it .ds{font-size:12px;color:var(--muted)}.it .ds{text-align:right}
-.it .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
-.empty{padding:28px 20px;color:var(--muted);font-size:14px;line-height:1.5}
-.msg{margin:10px 20px 0;padding:9px 11px;border-radius:10px;background:#fdecea;color:#8a1c14;font-size:13px;display:none}
-.pinwrap{overflow:visible}
-.pin,.cl{position:absolute;transform:translate(-50%,-50%);color:#fff;white-space:nowrap;border:2px solid #fff;box-shadow:0 1px 5px #0e1b2c66;font-weight:800}
-.pin{padding:3px 8px;border-radius:999px;font-size:12px}
-.pin.aprox{border-style:dashed;opacity:.82}
-.cl{padding:5px 10px;border-radius:14px;text-align:center;font-size:13px;line-height:1.15}
-.cl small{display:block;font-size:10px;font-weight:500;opacity:.9}
-.s0{background:var(--s0)}.s1{background:var(--s1)}.s2{background:var(--s2);color:#2a2100}.s3{background:var(--s3)}.s4{background:var(--s4)}
-.pp{min-width:230px;font-family:'Schibsted Grotesk',system-ui,sans-serif}
-.pp h3{margin:0;font-size:16px;letter-spacing:-.01em}.pp .a{font-size:12px;color:var(--muted);margin:2px 0 10px}
-.pp .r{display:flex;justify-content:space-between;padding:5px 8px;border-radius:7px;font-size:13px}
-.pp .r.on{background:#e8efff;font-weight:700}
-.pp .n{font-size:11.5px;color:#8a5a00;margin-top:8px}.pp .v{font-size:11px;color:var(--muted);margin-top:8px}
-.pp a{display:block;margin-top:10px;text-align:center;background:var(--brand);color:#fff!important;text-decoration:none;font-weight:700;padding:8px;border-radius:9px;font-size:13px}
-.pp a.alt{background:#e8efff;color:var(--brand)!important;margin-top:8px}
-.pp{width:min(300px,68vw)}
-.pp .r{width:100%;border:0;background:none;font:inherit;font-size:13px;cursor:pointer;text-align:left;color:inherit}
-.pp .r:hover{background:var(--bg)}.pp .r.on{background:#e8efff;font-weight:700}.pp .r.off{color:#9aa7b8;cursor:default}
-.pp .hint{font-size:11px;color:var(--muted);margin:8px 0 2px}
-.ch{margin-top:2px;min-height:158px}.ch svg{width:100%;height:auto;display:block}.ch .cap{font-size:12px;color:var(--ink);margin-top:2px}
-.empty-ch{font-size:12px;color:var(--muted);padding:18px 0;text-align:center}
-@media(max-width:800px){
- body{grid-template-columns:1fr;grid-template-rows:52vh 1fr}
- #map{order:1}aside{order:2;overflow:auto;border-right:0;border-top:1px solid var(--line)}
- .list{overflow:visible}
-}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  html, body { height: 100%; overflow: hidden; }
+  .app-shell {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    height: 100dvh;
+    width: 100%;
+    transition: grid-template-columns 0.22s ease;
+  }
+  .app-shell.collapsed {
+    grid-template-columns: 0px 1fr;
+  }
+
+  /* ── Sidebar ─────────────────────────── */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    z-index: 20;
+    overflow: hidden;
+  }
+  .sb-top {
+    padding: 14px 18px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sb-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .sb-nav {
+    display: flex;
+    gap: 4px;
+    background: var(--surface-2);
+    padding: 3px;
+    border-radius: 10px;
+  }
+  .sb-nav a {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 6px 8px;
+    border-radius: 7px;
+    transition: all 0.15s;
+  }
+  .sb-nav a:hover { color: var(--ink); }
+  .sb-nav a.active {
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 700;
+    box-shadow: var(--shadow-xs);
+  }
+  .sb-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .sb-status.warn { color: var(--up); font-weight: 600; }
+
+  .sb-controls {
+    padding: 12px 18px;
+    display: grid;
+    gap: 9px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .sb-controls .seg {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .sb-controls .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .sb-controls .seg label {
+    text-align: center;
+    padding: 7px 4px;
+    font-size: 12px;
+  }
+  .filter-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+  .gps-btn.active {
+    background: var(--down-soft);
+    border-color: #a7f3d0;
+    color: var(--down);
+  }
+  .extra-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .chk {
+    font-size: 12px;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .chk input { accent-color: var(--brand); }
+  .sort-pill {
+    display: inline-flex;
+    background: var(--surface-2);
+    padding: 2px;
+    border-radius: 8px;
+    gap: 2px;
+  }
+  .sort-pill button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .sort-pill button.on {
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 700;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .msg-banner {
+    margin: 10px 18px 0;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: var(--up-soft);
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    font-size: 12.5px;
+    display: none;
+  }
+
+  .sb-stats {
+    padding: 12px 18px 10px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-hover);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .stat-cell span {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .stat-cell b {
+    display: block;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-top: 1px;
+  }
+  .legend {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-bar {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--s0), var(--s1), var(--s2), var(--s3), var(--s4));
+    margin-bottom: 4px;
+  }
+  .legend-labels {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .list-head {
+    padding: 8px 18px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .station-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .st-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3px 12px;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-soft);
+    padding: 12px 18px;
+    cursor: pointer;
+    color: inherit;
+    transition: background 0.12s;
+  }
+  .st-item:hover, .st-item:focus-visible {
+    background: var(--surface-hover);
+  }
+  .st-item.selected {
+    background: var(--brand-soft);
+  }
+  .st-item .nm {
+    font-weight: 700;
+    font-size: 13.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .st-item .nm-txt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .st-item .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .st-item .pc {
+    font-weight: 800;
+    font-size: 15px;
+    text-align: right;
+    letter-spacing: -0.02em;
+  }
+  .st-item .ad {
+    font-size: 12px;
+    color: var(--muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 17px;
+  }
+  .st-item .ds {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: right;
+  }
+  .list-more {
+    padding: 12px 18px;
+    text-align: center;
+  }
+  .empty-list {
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+
+  /* ── Map Stage ───────────────────────── */
+  .map-stage {
+    position: relative;
+    height: 100%;
+    min-height: 0;
+    background: #e9edf3;
+  }
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .map-fab-bar {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .map-fab-group {
+    display: flex;
+    gap: 8px;
+    pointer-events: auto;
+  }
+  .map-fab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--ink);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: background 0.15s, transform 0.12s;
+  }
+  .map-fab:hover { background: #fff; }
+  .map-fab:active { transform: scale(0.97); }
+  .map-fab.on {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+
+  /* ── Leaflet Markers & Clusters ──────── */
+  .pinwrap { overflow: visible; }
+  .pin, .cl {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    white-space: nowrap;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.28);
+    font-weight: 800;
+    font-family: var(--font);
+    transition: transform 0.12s ease;
+  }
+  .pin:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+    z-index: 999;
+  }
+  .pin {
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    letter-spacing: -0.01em;
+  }
+  .pin.aprox {
+    border-style: dashed;
+    opacity: 0.88;
+  }
+  .pin.active-pin {
+    transform: translate(-50%, -50%) scale(1.14);
+    box-shadow: 0 0 0 3px var(--brand), 0 4px 12px rgba(15, 23, 42, 0.35);
+  }
+  .cl {
+    padding: 5px 10px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 1.15;
+  }
+  .cl small {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    opacity: 0.92;
+  }
+  .s0 { background: var(--s0); }
+  .s1 { background: var(--s1); }
+  .s2 { background: var(--s2); color: #2b2100; }
+  .s3 { background: var(--s3); }
+  .s4 { background: var(--s4); }
+
+  /* Leaflet popup styling */
+  .leaflet-popup-content-wrapper {
+    border-radius: 16px !important;
+    box-shadow: var(--shadow-lg) !important;
+    border: 1px solid var(--line);
+    padding: 0 !important;
+  }
+  .leaflet-popup-content {
+    margin: 14px 16px !important;
+    width: auto !important;
+  }
+  .leaflet-popup-close-button {
+    top: 10px !important;
+    right: 10px !important;
+    color: var(--muted) !important;
+    font-size: 18px !important;
+  }
+
+  /* Station detail card (shared between popup & mobile sheet) */
+  .pp {
+    width: min(310px, 76vw);
+    font-family: var(--font);
+  }
+  .pp h3 {
+    margin: 0;
+    padding-right: 18px;
+    font-size: 15.5px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .pp .pp-addr {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 3px 0 10px;
+    line-height: 1.4;
+  }
+  .pp .pp-fuels {
+    display: grid;
+    gap: 3px;
+  }
+  .pp .r {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    color: var(--ink);
+    transition: background 0.12s;
+  }
+  .pp .r:hover { background: var(--surface-2); }
+  .pp .r.on {
+    background: var(--brand-soft);
+    border-color: var(--brand-border);
+    font-weight: 700;
+    color: var(--brand);
+  }
+  .pp .r.off {
+    color: var(--subtle);
+    cursor: default;
+  }
+  .pp .r.off:hover { background: transparent; }
+  .pp .hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 8px 0 4px;
+  }
+  .pp .ch {
+    min-height: 140px;
+    background: var(--surface-hover);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    padding: 8px 8px 6px;
+  }
+  .pp .ch svg { width: 100%; height: auto; display: block; }
+  .pp .ch .cap { font-size: 11.5px; color: var(--ink-2); margin-top: 4px; font-weight: 500; }
+  .pp .empty-ch { font-size: 12px; color: var(--muted); padding: 22px 8px; text-align: center; }
+  .pp .pp-note {
+    font-size: 11.5px;
+    color: #92400e;
+    background: #fef3c7;
+    padding: 6px 9px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  .pp .pp-vig { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .pp .pp-actions {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .pp .pp-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12.5px;
+    padding: 9px 12px;
+    border-radius: 9px;
+  }
+  .pp .pp-actions a.primary {
+    background: var(--brand);
+    color: #fff;
+  }
+  .pp .pp-actions a.primary:hover { background: var(--brand-hover); }
+  .pp .pp-actions a.secondary {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+  .pp .pp-actions a.secondary:hover { background: var(--line); }
+
+  /* ── Mobile Controls & Bottom Switcher ── */
+  .mobile-bar, .mobile-switcher, .sheet-backdrop, .mobile-sheet {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .app-shell, .app-shell.collapsed {
+      display: flex;
+      flex-direction: column;
+      grid-template-columns: none;
+      height: 100dvh;
+    }
+    .sidebar {
+      position: fixed;
+      inset: 0;
+      top: 0;
+      z-index: 600;
+      border-right: 0;
+      display: none;
+    }
+    body.mobile-list .sidebar {
+      display: flex;
+      padding-top: 108px;
+      padding-bottom: 76px;
+    }
+    body.mobile-list .sb-top,
+    body.mobile-list .sb-controls {
+      display: none;
+    }
+    .mobile-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 700;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      padding: 8px 12px 10px;
+    }
+    .mb-row1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mb-row1 .brand { font-size: 14px; gap: 7px; }
+    .mb-row1 .brand-mark { width: 26px; height: 26px; border-radius: 7px; }
+    .mb-nav {
+      display: flex;
+      gap: 3px;
+      background: var(--surface-2);
+      padding: 3px;
+      border-radius: 9px;
+    }
+    .mb-nav a {
+      text-decoration: none;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--muted);
+      padding: 5px 8px;
+      border-radius: 7px;
+    }
+    .mb-nav a.active {
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 700;
+      box-shadow: var(--shadow-xs);
+    }
+    .mb-row2 {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 6px;
+      align-items: center;
+    }
+    .mb-row2 .input {
+      padding: 7px 28px 7px 30px;
+      font-size: 13px;
+    }
+    .mb-filter-panel {
+      display: none;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding-top: 4px;
+    }
+    .mb-filter-panel.open {
+      display: grid;
+    }
+    .mb-fuel-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: 100%;
+    }
+    .mb-fuel-row button {
+      padding: 6px 4px;
+      font-size: 11.5px;
+      text-align: center;
+    }
+
+    .map-stage {
+      flex: 1;
+      height: 100%;
+      padding-top: 96px;
+    }
+    .map-fab-bar {
+      top: 110px;
+    }
+    #toggle-sb-btn {
+      display: none;
+    }
+
+    /* Floating View Switcher on Mobile */
+    .mobile-switcher {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: fixed;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 750;
+      background: var(--ink);
+      padding: 4px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-lg);
+    }
+    .mobile-switcher button {
+      border: 0;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .mobile-switcher button.on {
+      background: #fff;
+      color: var(--ink);
+    }
+
+    /* Bottom Sheet for Station Details on Mobile */
+    .sheet-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.36);
+      z-index: 800;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .sheet-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .mobile-sheet {
+      display: block;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 850;
+      background: var(--surface);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      padding: 10px 18px max(20px, env(safe-area-inset-bottom));
+      max-height: 82dvh;
+      overflow-y: auto;
+      transform: translateY(105%);
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mobile-sheet.open {
+      transform: translateY(0);
+    }
+    .sheet-handle {
+      width: 38px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--line);
+      margin: 0 auto 10px;
+    }
+    .sheet-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      border: 0;
+      background: var(--surface-2);
+      color: var(--muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .mobile-sheet .pp {
+      width: 100%;
+    }
+  }
 </style>
 </head>
 <body>
-<aside>
-  <div class="head"><h1>Precios YPF</h1><div class="sub" id="sub">Cargando precios…</div>
-    <div class="natls">
-      <a class="natl" href="argentina.html">Panorama nacional: provincias y evolución →</a>
-      <a class="natl" href="ranking.html">Ranking de ventas: volumen y facturación →</a>
-    </div></div>
-  <div class="ctrl">
-    <div class="seg" role="radiogroup" aria-label="Combustible" id="seg"></div>
-    <input type="search" id="q" placeholder="Buscar localidad, calle u operador" aria-label="Buscar estación">
-    <div class="row"><select id="prov" aria-label="Provincia"><option value="">Todo el país</option></select><button class="btn" id="loc" type="button">Cerca de mí</button></div>
-    <label class="chk"><input type="checkbox" id="dud"> Incluir estaciones con ubicación dudosa</label>
+
+<!-- Mobile Top Header -->
+<div class="mobile-bar" aria-label="Controles móviles">
+  <div class="mb-row1">
+    <a class="brand" href="index.html">
+      <span class="ypf-logo" aria-hidden="true">
+        <svg width="46" height="21" viewBox="0 0 108 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="48" rx="10" fill="#004B93"/>
+          <text x="54" y="33.5" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Inter', Arial, sans-serif" font-weight="900" font-size="27" letter-spacing="1.5">YPF</text>
+          <rect x="14" y="39" width="80" height="2.6" rx="1.3" fill="#38BDF8"/>
+        </svg>
+      </span>
+      <span>Precios</span>
+    </a>
+    <nav class="mb-nav" aria-label="Secciones">
+      <a href="index.html" class="active">Mapa</a>
+      <a href="argentina.html">Panorama</a>
+      <a href="ranking.html">Ranking</a>
+    </nav>
   </div>
-  <div class="msg" id="msg" role="alert"></div>
-  <div class="stats"><div>Más barata<b id="st0">–</b></div><div>Mediana<b id="st1">–</b></div><div>Más cara<b id="st2">–</b></div></div>
-  <div class="legend"><div class="bar"></div><div><span id="lo"></span><span>comparado con todo el país</span><span id="hi"></span></div></div>
-  <div class="list" id="list" aria-live="polite"></div>
-</aside>
-<div id="map"></div>
+  <div class="mb-row2">
+    <div class="search-wrap">
+      <svg class="search-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="search" id="q-mob" class="input" placeholder="Buscar localidad, calle…" aria-label="Buscar estación">
+      <button type="button" class="search-clear" id="q-mob-clr" aria-label="Limpiar búsqueda" hidden>×</button>
+    </div>
+    <button type="button" class="btn btn-sm" id="mb-flt-btn" aria-expanded="false">Filtros</button>
+    <button type="button" class="btn btn-sm gps-btn" id="loc-mob" title="Cerca de mí">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+    </button>
+  </div>
+  <div class="seg mb-fuel-row" id="seg-mob" role="tablist" aria-label="Combustible"></div>
+  <div class="mb-filter-panel" id="mb-flt-panel">
+    <select id="prov-mob" class="select" aria-label="Provincia"><option value="">Todo el país</option></select>
+    <label class="chk" id="dud-mob-wrap"><input type="checkbox" id="dud-mob"> Incluir estaciones con ubicación dudosa</label>
+  </div>
+</div>
+
+<div class="app-shell" id="shell">
+  <!-- Desktop / Tablet Sidebar & Mobile List Container -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <div class="sb-brand-row">
+        <a class="brand" href="index.html">
+          <span class="ypf-logo" aria-hidden="true">
+            <svg width="52" height="23" viewBox="0 0 108 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="108" height="48" rx="10" fill="#004B93"/>
+              <text x="54" y="33.5" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Inter', Arial, sans-serif" font-weight="900" font-size="27" letter-spacing="1.5">YPF</text>
+              <rect x="14" y="39" width="80" height="2.6" rx="1.3" fill="#38BDF8"/>
+            </svg>
+          </span>
+          <span>Precios</span>
+        </a>
+        <div class="sb-status" id="sub-wrap">
+          <span class="live-dot" id="live-dot"></span>
+          <span id="sub">Cargando…</span>
+        </div>
+      </div>
+      <nav class="sb-nav" aria-label="Secciones">
+        <a href="index.html" class="active">Mapa</a>
+        <a href="argentina.html">Panorama nacional</a>
+        <a href="ranking.html">Ranking ventas</a>
+      </nav>
+    </div>
+
+    <div class="sb-controls">
+      <div class="seg" role="radiogroup" aria-label="Combustible" id="seg"></div>
+      <div class="search-wrap">
+        <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" id="q" class="input" placeholder="Localidad, calle u operador…" aria-label="Buscar estación">
+        <button type="button" class="search-clear" id="q-clr" aria-label="Limpiar búsqueda" hidden>×</button>
+      </div>
+      <div class="filter-row">
+        <select id="prov" class="select" aria-label="Provincia"><option value="">Todo el país</option></select>
+        <button class="btn btn-primary gps-btn" id="loc" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+          Cerca de mí
+        </button>
+      </div>
+      <div class="extra-row">
+        <label class="chk" id="dud-wrap"><input type="checkbox" id="dud"> Incluir ubicaciones dudosas</label>
+        <div class="sort-pill" id="sort-pill" hidden>
+          <button type="button" data-sort="price" class="on">Menor precio</button>
+          <button type="button" data-sort="dist">Más cerca</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg-banner" id="msg" role="alert"></div>
+
+    <div class="sb-stats">
+      <div class="stats-grid">
+        <div class="stat-cell"><span>Más barata</span><b id="st0">–</b></div>
+        <div class="stat-cell"><span>Mediana</span><b id="st1">–</b></div>
+        <div class="stat-cell"><span>Más cara</span><b id="st2">–</b></div>
+      </div>
+      <div class="legend">
+        <div class="legend-bar"></div>
+        <div class="legend-labels">
+          <span id="lo">–</span>
+          <span>escala nacional</span>
+          <span id="hi">–</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="list-head">
+      <span id="vis-count">Estaciones en pantalla</span>
+      <span id="sort-hint">Orden: menor precio</span>
+    </div>
+
+    <div class="station-list" id="list" aria-live="polite"></div>
+  </aside>
+
+  <!-- Interactive Map -->
+  <main class="map-stage">
+    <div class="map-fab-bar">
+      <div class="map-fab-group">
+        <button type="button" class="map-fab" id="toggle-sb-btn" title="Ocultar o mostrar panel">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+          <span id="toggle-sb-lbl">Ocultar panel</span>
+        </button>
+      </div>
+      <div class="map-fab-group">
+        <button type="button" class="map-fab" id="reset-view" title="Ver toda la Argentina">Todo el país</button>
+        <button type="button" class="map-fab" id="layer-btn" title="Cambiar estilo de mapa">Calles</button>
+      </div>
+    </div>
+    <div id="map"></div>
+  </main>
+</div>
+
+<!-- Mobile Bottom View Switcher -->
+<div class="mobile-switcher" role="tablist" aria-label="Vista">
+  <button type="button" id="sw-map" class="on" role="tab" aria-selected="true">Mapa</button>
+  <button type="button" id="sw-list" role="tab" aria-selected="false">Lista (<span id="mob-cnt">0</span>)</button>
+</div>
+
+<!-- Mobile Station Detail Sheet -->
+<div class="sheet-backdrop" id="sheet-bg"></div>
+<div class="mobile-sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Detalle de estación">
+  <div class="sheet-handle"></div>
+  <button type="button" class="sheet-close" id="sheet-close" aria-label="Cerrar">×</button>
+  <div id="sheet-body"></div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<script src="shared.js"></script>
 <script>
-const FUELS={NS:'Súper',IN:'Infinia',EURO:'Euro Diésel',D500:'Diésel 500'};
-const FULL={NS:'Nafta Súper',IN:'Infinia',EURO:'Euro Diésel',D500:'Diésel 500'};
-const EXACT=new Set(['altura','exacta_csv_oficial','altura_osm','interseccion','poste_kilometrico','calle_csv_oficial','revisada']);
-const $=s=>document.querySelector(s);
-const money=n=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(n);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-const km=(a,b,c,d)=>{const r=Math.PI/180,x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 12742*Math.asin(Math.sqrt(x))};
-const state={fuel:'NS',q:'',prov:'',dud:false,pos:null};
-let ST=[],scale={lo:0,hi:1},markers=new Map();
+(() => {
+  const { FUEL_SHORT, FUEL_FULL, FKEYS, EXACT, $, money, esc, norm, km, fmtDateShort, f2 } = window.YPF;
 
-$('#seg').innerHTML=Object.entries(FUELS).map(([k,v])=>`<input type="radio" name="f" id="f${k}" value="${k}"${k==='NS'?' checked':''}><label for="f${k}">${v}</label>`).join('');
+  const state = { fuel: 'NS', q: '', prov: '', dud: false, pos: null, sort: 'price', limit: 60 };
+  let ST = [], scale = { lo: 0, hi: 1 }, markers = new Map();
+  let FIN = '', VER = '', selectedId = null, mapStyle = 'claro';
+  const histCache = {};
+  const isMobile = () => window.matchMedia('(max-width: 860px)').matches;
 
-const map=L.map('map',{zoomControl:false}).setView([-38.4,-63.6],5);
-L.control.zoom({position:'bottomright'}).addTo(map);
-const esri=u=>L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/'+u+'/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:16,maxZoom:19,attribution:'Tiles &copy; Esri'});
-const claro=L.layerGroup([esri('World_Light_Gray_Base'),esri('World_Light_Gray_Reference')]).addTo(map);
-const calles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
-L.control.layers({'Mapa claro':claro,'Calles':calles},null,{position:'bottomleft'}).addTo(map);
+  /* ── Fuel Segmented Controls (Desktop + Mobile) ── */
+  $('#seg').innerHTML = FKEYS.map(k =>
+    `<input type="radio" name="f" id="f${k}" value="${k}"${k === state.fuel ? ' checked' : ''}><label for="f${k}">${FUEL_SHORT[k]}</label>`
+  ).join('');
 
-const bucket=p=>Math.max(0,Math.min(4,Math.floor((p-scale.lo)/((scale.hi-scale.lo)||1)*5)));
-const cluster=L.markerClusterGroup({maxClusterRadius:55,showCoverageOnHover:false,disableClusteringAtZoom:12,chunkedLoading:true,
-  iconCreateFunction:c=>{const ms=c.getAllChildMarkers(),min=ms.reduce((m,x)=>Math.min(m,x.options.price),Infinity);
-    return L.divIcon({className:'pinwrap',iconSize:[0,0],html:`<span class="cl s${bucket(min)}">desde ${money(min)}<small>${ms.length} estaciones</small></span>`})}});
-map.addLayer(cluster);
+  $('#seg-mob').innerHTML = FKEYS.map(k =>
+    `<button type="button" data-k="${k}" class="${k === state.fuel ? 'on' : ''}">${k === 'EURO' ? 'Euro' : k === 'D500' ? 'D500' : FUEL_SHORT[k]}</button>`
+  ).join('');
 
-const f2=d=>d.split('-').reverse().join('/');
-function popup(e){
-  const note=e.pr==='sospechosa'?'Ubicación dudosa: confirmá la dirección antes de ir.':EXACT.has(e.pr)?'':'Ubicación aproximada (centro de la zona).';
-  return `<div class="pp" data-id="${esc(e.id)}"><h3>${esc(e.o)}</h3><div class="a">${esc(e.d)}<br>${esc(e.l)}, ${esc(e.p)}</div>`+
-    Object.keys(FUELS).map(k=>e.n[k]!=null?`<button class="r" data-k="${k}"><span>${FULL[k]}</span><b>${money(e.n[k])}</b></button>`:`<div class="r off"><span>${FULL[k]}</span><b>–</b></div>`).join('')+
-    `<div class="hint">Tocá un combustible para ver su historial</div><div class="ch" aria-live="polite"></div>`+
-    (note?`<div class="n">${note}</div>`:'')+(e.v?`<div class="v">Precio vigente desde ${f2(e.v)}</div>`:'')+
-    `<a class="alt" href="estacion.html?id=${encodeURIComponent(e.id)}&f=${encodeURIComponent(state.fuel)}">Ver análisis completo: precios, evolución e impuestos →</a>`+
-    `<a href="https://www.google.com/maps/dir/?api=1&destination=${e.la},${e.lo}" target="_blank" rel="noopener">Cómo llegar</a></div>`;
-}
-function popupEl(e){const d=document.createElement('div');d.innerHTML=popup(e);return d.firstElementChild}
-let FIN='',VER='';const histCache={};
-async function hist(id){
-  const b=id.slice(0,2);
-  if(!histCache[b])histCache[b]=fetch(`hist/${b}.json?v=${encodeURIComponent(VER)}`).then(r=>r.ok?r.json():{}).catch(()=>({}));
-  return (await histCache[b])[id]||{};
-}
-function chart(s){
-  s=(s||[]).map(a=>[String(a[0]).slice(0,10),Number(a[1])]).filter(a=>/^\d{4}-\d\d-\d\d$/.test(a[0])&&a[1]>0).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);
-  if(!s.length)return '<div class="empty-ch">Todavía no hay historial para este combustible.</div>';
-  const D=864e5,T=d=>Date.parse(d+'T12:00:00'),W=300,H=120,L=6,R=6,Tp=16,B=20,base=H-B;
-  const t0=T(s[0][0]),t1=Math.max(T(FIN||s[s.length-1][0]),T(s[s.length-1][0])),span=Math.max(t1-t0,7*D);
-  const X=t=>(L+(t-(t1-span))/span*(W-L-R)).toFixed(1);
-  const v=s.map(a=>a[1]),mn=Math.min(...v),mx=Math.max(...v),pad=(mx-mn)||mx*.02,lo=mn-pad*.25,hi=mx+pad*.25;
-  const Y=p=>(Tp+(hi-p)/(hi-lo)*(base-Tp)).toFixed(1);
-  const ts=s.length===1?t1-span:t0;let d=`M${X(ts)},${Y(v[0])}`;s.slice(1).forEach(([f,p])=>{d+=`H${X(T(f))}V${Y(p)}`});d+=`H${X(t1)}`;
-  const dots=s.map(([f,p])=>`<circle cx="${X(T(f))}" cy="${Y(p)}" r="3" fill="#fff" stroke="#1747d6" stroke-width="2"><title>${f2(f)}: ${money(p)}</title></circle>`).join('');
-  const ch=(v[v.length-1]/v[0]-1)*100,tx=(x,y,a,t)=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="10" fill="#5b6b80">${t}</text>`;
-  const cap=s.length>1?`Desde ${f2(s[0][0])}: ${ch>=0?'+':''}${ch.toFixed(1).replace('.',',')}% (${money(v[0])} → ${money(v[v.length-1])})`:`Sin cambios desde ${f2(s[0][0])}. El gráfico se completa día a día.`;
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Historial de precios"><line x1="${L}" x2="${W-R}" y1="${base}" y2="${base}" stroke="#dde3ec"/><path d="${d}V${base}H${X(ts)}Z" fill="#1747d61f"/><path d="${d}" fill="none" stroke="#1747d6" stroke-width="2"/>${dots}`+
-    tx(L,11,'start',money(mx))+(mn!==mx?tx(L,base-4,'start',money(mn)):'')+(s.length>1&&X(t0)<W-90?tx(X(t0),H-5,'start',f2(s[0][0])):'')+tx(W-R,H-5,'end',FIN?f2(FIN):'hoy')+`</svg><div class="cap">${cap}</div>`;
-}
-map.on('popupopen',ev=>{
-  const root=ev.popup.getElement().querySelector('.pp');if(!root)return;
-  const id=root.dataset.id,e=ST.find(x=>x.id===id),box=root.querySelector('.ch');
-  const sel=async k=>{root.querySelectorAll('.r[data-k]').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
-    box.innerHTML='<div class="empty-ch">Cargando historial…</div>';
-    try{const hh=await hist(id);box.innerHTML=chart(hh[k])}catch(err){box.innerHTML='<div class="empty-ch">No se pudo mostrar el historial ('+esc(err.message)+')</div>';console.error(err)}};
-  root._sel=sel;
-  if(!root.dataset.b){root.dataset.b=1;root.addEventListener('click',x=>{const b=x.target.closest('.r[data-k]');if(b)root._sel(b.dataset.k)})}
-  sel(e.n[state.fuel]!=null?state.fuel:Object.keys(e.n)[0]);
-});
-function mk(e){
-  const p=e.n[state.fuel];
-  const m=L.marker([e.la,e.lo],{price:p,icon:L.divIcon({className:'pinwrap',iconSize:[0,0],html:`<span class="pin s${bucket(p)}${EXACT.has(e.pr)?'':' aprox'}">${money(p)}</span>`})});
-  m.bindPopup(()=>m._pe||(m._pe=popupEl(e)),{maxWidth:340});markers.set(e.id,m);return m;
-}
-function visible(){
-  const q=norm(state.q);
-  return ST.filter(e=>e.n[state.fuel]!=null&&(state.dud||e.pr!=='sospechosa')&&(!state.prov||e.p===state.prov)&&(!q||e.h.includes(q)));
-}
-function render(fit){
-  const all=ST.filter(e=>e.n[state.fuel]!=null&&e.pr!=='sospechosa').map(e=>e.n[state.fuel]).sort((a,b)=>a-b);
-  scale={lo:all[Math.floor(all.length*.05)]||0,hi:all[Math.floor(all.length*.95)]||1};
-  $('#lo').textContent=money(scale.lo);$('#hi').textContent=money(scale.hi);
-  const vs=visible();markers=new Map();cluster.clearLayers();cluster.addLayers(vs.map(mk));
-  if(fit&&vs.length)map.fitBounds(L.latLngBounds(vs.map(e=>[e.la,e.lo])).pad(.1),{maxZoom:13});
-  list();
-}
-function list(){
-  const b=map.getBounds(),f=state.fuel;
-  const vs=visible().filter(e=>b.contains([e.la,e.lo]));
-  if(state.pos)vs.forEach(e=>e.d_=km(state.pos[0],state.pos[1],e.la,e.lo));
-  vs.sort((a,c)=>a.n[f]-c.n[f]||(a.d_-c.d_)||0);
-  const pr=vs.map(e=>e.n[f]),med=pr.length?pr[Math.floor(pr.length/2)]:null;
-  $('#st0').textContent=pr.length?money(pr[0]):'–';$('#st1').textContent=med?money(med):'–';$('#st2').textContent=pr.length?money(pr[pr.length-1]):'–';
-  $('#list').innerHTML=vs.length?vs.slice(0,30).map(e=>`<button class="it" data-id="${esc(e.id)}"><span class="nm"><i class="dot s${bucket(e.n[f])}"></i>${esc(e.o)}</span><span class="pc">${money(e.n[f])}</span><span class="ad">${esc(e.d)}, ${esc(e.l)}</span><span class="ds">${state.pos&&e.d_!=null?e.d_.toFixed(1).replace('.',',')+' km':''}</span></button>`).join('')
-    :'<div class="empty">No hay estaciones en esta parte del mapa. Alejá el zoom, cambiá de provincia o borrá la búsqueda.</div>';
-}
-function show(id){
-  const e=ST.find(x=>x.id===id),m=markers.get(id);if(!m)return;
-  map.setView([e.la,e.lo],Math.max(map.getZoom(),15));cluster.zoomToShowLayer(m,()=>m.openPopup());
-}
-function error(t){const m=$('#msg');m.textContent=t;m.style.display=t?'block':'none'}
+  function setFuel(k) {
+    state.fuel = k;
+    const rad = $(`#f${k}`);
+    if (rad) rad.checked = true;
+    $('#seg-mob').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+    render();
+  }
 
-document.querySelectorAll('input[name=f]').forEach(r=>r.onchange=()=>{state.fuel=r.value;render()});
-let t;$('#q').oninput=e=>{clearTimeout(t);t=setTimeout(()=>{state.q=e.target.value;render(true)},250)};
-$('#prov').onchange=e=>{state.prov=e.target.value;render(true)};
-$('#dud').onchange=e=>{state.dud=e.target.checked;render()};
-$('#list').onclick=e=>{const b=e.target.closest('.it');if(b)show(b.dataset.id)};
-map.on('moveend',list);
-let me;$('#loc').onclick=()=>{error('');map.locate({enableHighAccuracy:true,timeout:10000})};
-map.on('locationfound',e=>{state.pos=[e.latlng.lat,e.latlng.lng];me&&me.remove();
-  me=L.circleMarker(e.latlng,{radius:8,color:'#fff',weight:3,fillColor:'#1747d6',fillOpacity:1}).addTo(map);map.setView(e.latlng,13)});
-map.on('locationerror',()=>error('No pudimos obtener tu ubicación. Permití el acceso desde el candado del navegador y probá de nuevo.'));
+  document.querySelectorAll('input[name=f]').forEach(r => r.onchange = () => setFuel(r.value));
+  $('#seg-mob').onclick = e => {
+    const b = e.target.closest('button[data-k]');
+    if (b) setFuel(b.dataset.k);
+  };
 
-fetch('data.json?'+Date.now()).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
-  ST=d.estaciones;FIN=(d.actualizado||d.vigencia||'').slice(0,10);VER=d.actualizado||d.vigencia||'';ST.forEach(e=>e.h=norm([e.o,e.d,e.l,e.p].join(' ')));
-  const fmt=new Intl.DateTimeFormat('es-AR',{timeZone:'America/Argentina/Buenos_Aires',dateStyle:'medium',timeStyle:'short'});
-  const sub=$('#sub');
-  if(d.actualizado){const h=(Date.now()-new Date(d.actualizado))/36e5;
-    sub.textContent='Actualizado '+fmt.format(new Date(d.actualizado));
-    if(h>36){sub.textContent+=': los datos pueden estar desactualizados';sub.classList.add('warn')}}
-  else sub.textContent='Precios vigentes al '+d.vigencia.split('-').reverse().join('/');
-  $('#prov').innerHTML+=[...new Set(ST.map(e=>e.p))].filter(Boolean).sort((a,b)=>a.localeCompare(b,'es')).map(p=>`<option>${esc(p)}</option>`).join('');
-  if(!ST.some(e=>e.pr==='sospechosa'))$('#dud').closest('label').hidden=true;
-  render();
-}).catch(()=>{$('#sub').textContent='No se pudieron cargar los precios';
-  error('No se pudo leer data.json. Si abriste el archivo con doble clic, serví la carpeta con: python -m http.server');});
+  /* ── Map Setup ── */
+  const map = L.map('map', { zoomControl: false }).setView([-38.4, -63.6], 5);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  const esri = u => L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/' + u + '/MapServer/tile/{z}/{y}/{x}', {
+    maxNativeZoom: 16, maxZoom: 19, attribution: 'Tiles &copy; Esri'
+  });
+  const claro = L.layerGroup([esri('World_Light_Gray_Base'), esri('World_Light_Gray_Reference')]).addTo(map);
+  const calles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution: '&copy; OpenStreetMap'
+  });
+
+  $('#layer-btn').onclick = () => {
+    if (mapStyle === 'claro') {
+      map.removeLayer(claro); calles.addTo(map); mapStyle = 'calles';
+      $('#layer-btn').textContent = 'Claro'; $('#layer-btn').classList.add('on');
+    } else {
+      map.removeLayer(calles); claro.addTo(map); mapStyle = 'claro';
+      $('#layer-btn').textContent = 'Calles'; $('#layer-btn').classList.remove('on');
+    }
+  };
+
+  $('#reset-view').onclick = () => {
+    map.setView([-38.4, -63.6], 5);
+  };
+
+  $('#toggle-sb-btn').onclick = () => {
+    const collapsed = $('#shell').classList.toggle('collapsed');
+    $('#toggle-sb-lbl').textContent = collapsed ? 'Mostrar panel' : 'Ocultar panel';
+    setTimeout(() => map.invalidateSize(), 240);
+  };
+
+  const bucket = p => Math.max(0, Math.min(4, Math.floor((p - scale.lo) / ((scale.hi - scale.lo) || 1) * 5)));
+
+  const cluster = L.markerClusterGroup({
+    maxClusterRadius: 54,
+    showCoverageOnHover: false,
+    disableClusteringAtZoom: 12,
+    chunkedLoading: true,
+    iconCreateFunction: c => {
+      const ms = c.getAllChildMarkers();
+      const min = ms.reduce((m, x) => Math.min(m, x.options.price), Infinity);
+      return L.divIcon({
+        className: 'pinwrap',
+        iconSize: [0, 0],
+        html: `<span class="cl s${bucket(min)}">desde ${money(min)}<small>${ms.length} est.</small></span>`
+      });
+    }
+  });
+  map.addLayer(cluster);
+
+  /* ── History & Popup / Sheet Content ── */
+  async function hist(id) {
+    const b = id.slice(0, 2);
+    if (!histCache[b]) {
+      histCache[b] = fetch(`hist/${b}.json?v=${encodeURIComponent(VER)}`).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    }
+    return (await histCache[b])[id] || {};
+  }
+
+  function chart(s) {
+    s = (s || [])
+      .map(a => [String(a[0]).slice(0, 10), Number(a[1])])
+      .filter(a => /^\d{4}-\d\d-\d\d$/.test(a[0]) && a[1] > 0)
+      .sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
+    if (!s.length) return '<div class="empty-ch">Todavía no hay historial para este combustible.</div>';
+    const D = 864e5, T = d => Date.parse(d + 'T12:00:00');
+    const W = 300, H = 112, L = 6, R = 6, Tp = 16, B = 18, base = H - B;
+    const t0 = T(s[0][0]), t1 = Math.max(T(FIN || s[s.length - 1][0]), T(s[s.length - 1][0])), span = Math.max(t1 - t0, 7 * D);
+    const X = t => (L + (t - (t1 - span)) / span * (W - L - R)).toFixed(1);
+    const v = s.map(a => a[1]), mn = Math.min(...v), mx = Math.max(...v), pad = (mx - mn) || mx * .02, lo = mn - pad * .25, hi = mx + pad * .25;
+    const Y = p => (Tp + (hi - p) / (hi - lo) * (base - Tp)).toFixed(1);
+    const ts = s.length === 1 ? t1 - span : t0;
+    let d = `M${X(ts)},${Y(v[0])}`;
+    s.slice(1).forEach(([f, p]) => { d += `H${X(T(f))}V${Y(p)}`; });
+    d += `H${X(t1)}`;
+    const dots = s.map(([f, p]) =>
+      `<circle cx="${X(T(f))}" cy="${Y(p)}" r="3" fill="#fff" stroke="#1747d6" stroke-width="2"><title>${f2(f)}: ${money(p)}</title></circle>`
+    ).join('');
+    const ch = (v[v.length - 1] / v[0] - 1) * 100;
+    const tx = (x, y, a, t) => `<text x="${x}" y="${y}" text-anchor="${a}" font-size="10" fill="#64748b">${t}</text>`;
+    const cap = s.length > 1
+      ? `Desde ${f2(s[0][0])}: ${ch >= 0 ? '+' : ''}${ch.toFixed(1).replace('.', ',')}% (${money(v[0])} → ${money(v[v.length - 1])})`
+      : `Sin cambios desde ${f2(s[0][0])}.`;
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Historial de precios">
+      <line x1="${L}" x2="${W - R}" y1="${base}" y2="${base}" stroke="#e2e8f0"/>
+      <path d="${d}V${base}H${X(ts)}Z" fill="rgba(23,71,214,0.12)"/>
+      <path d="${d}" fill="none" stroke="#1747d6" stroke-width="2.2"/>
+      ${dots}
+      ${tx(L, 11, 'start', money(mx))}
+      ${mn !== mx ? tx(L, base - 4, 'start', money(mn)) : ''}
+      ${s.length > 1 && X(t0) < W - 90 ? tx(X(t0), H - 4, 'start', f2(s[0][0])) : ''}
+      ${tx(W - R, H - 4, 'end', FIN ? f2(FIN) : 'hoy')}
+    </svg><div class="cap">${cap}</div>`;
+  }
+
+  function popupHtml(e) {
+    const note = e.pr === 'sospechosa'
+      ? 'Ubicación dudosa: confirmá la dirección antes de ir.'
+      : EXACT.has(e.pr) ? '' : 'Ubicación aproximada (centro de la zona).';
+    const distTxt = state.pos ? ` · ${km(state.pos[0], state.pos[1], e.la, e.lo).toFixed(1).replace('.', ',')} km` : '';
+    return `<div class="pp" data-id="${esc(e.id)}">
+      <h3>${esc(e.o)}</h3>
+      <div class="pp-addr">${esc(e.d)}<br>${esc(e.l)}, ${esc(e.p)}${distTxt}</div>
+      <div class="pp-fuels">
+        ${FKEYS.map(k => e.n[k] != null
+          ? `<button type="button" class="r" data-k="${k}"><span>${FUEL_FULL[k]}</span><b>${money(e.n[k])}</b></button>`
+          : `<div class="r off"><span>${FUEL_FULL[k]}</span><b>–</b></div>`
+        ).join('')}
+      </div>
+      <div class="hint">Tocá un combustible para ver su historial</div>
+      <div class="ch" aria-live="polite"></div>
+      ${note ? `<div class="pp-note">${note}</div>` : ''}
+      ${e.v ? `<div class="pp-vig">Precio vigente desde ${f2(e.v)}</div>` : ''}
+      <div class="pp-actions">
+        <a class="primary" href="estacion.html?id=${encodeURIComponent(e.id)}&f=${encodeURIComponent(state.fuel)}">Ver análisis completo →</a>
+        <a class="secondary" href="https://www.google.com/maps/dir/?api=1&destination=${e.la},${e.lo}" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </div>`;
+  }
+
+  function wireStationCard(root, e) {
+    const id = e.id, box = root.querySelector('.ch');
+    const sel = async k => {
+      root.querySelectorAll('.r[data-k]').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+      box.innerHTML = '<div class="empty-ch">Cargando historial…</div>';
+      try {
+        const hh = await hist(id);
+        box.innerHTML = chart(hh[k]);
+      } catch (err) {
+        box.innerHTML = '<div class="empty-ch">No se pudo cargar el historial.</div>';
+      }
+    };
+    root.addEventListener('click', ev => {
+      const b = ev.target.closest('.r[data-k]');
+      if (b) sel(b.dataset.k);
+    });
+    const initFuel = e.n[state.fuel] != null ? state.fuel : Object.keys(e.n)[0];
+    if (initFuel) sel(initFuel);
+  }
+
+  function openMobileSheet(e) {
+    const body = $('#sheet-body');
+    body.innerHTML = popupHtml(e);
+    wireStationCard(body.firstElementChild, e);
+    $('#sheet-bg').classList.add('open');
+    $('#sheet').classList.add('open');
+  }
+
+  function closeMobileSheet() {
+    $('#sheet-bg').classList.remove('open');
+    $('#sheet').classList.remove('open');
+  }
+  $('#sheet-bg').onclick = closeMobileSheet;
+  $('#sheet-close').onclick = closeMobileSheet;
+
+  map.on('popupopen', ev => {
+    const root = ev.popup.getElement().querySelector('.pp');
+    if (!root) return;
+    const e = ST.find(x => x.id === root.dataset.id);
+    if (e) wireStationCard(root, e);
+  });
+
+  function mk(e) {
+    const p = e.n[state.fuel];
+    const m = L.marker([e.la, e.lo], {
+      price: p,
+      icon: L.divIcon({
+        className: 'pinwrap',
+        iconSize: [0, 0],
+        html: `<span class="pin s${bucket(p)}${EXACT.has(e.pr) ? '' : ' aprox'}">${money(p)}</span>`
+      })
+    });
+    m.on('click', () => {
+      selectedId = e.id;
+      if (isMobile()) {
+        openMobileSheet(e);
+      } else {
+        if (!m.getPopup()) {
+          const wrap = document.createElement('div');
+          wrap.innerHTML = popupHtml(e);
+          m.bindPopup(wrap.firstElementChild, { maxWidth: 340, autoPanPadding: [30, 30] });
+        }
+        m.openPopup();
+      }
+    });
+    markers.set(e.id, m);
+    return m;
+  }
+
+  function visible() {
+    const q = norm(state.q);
+    return ST.filter(e =>
+      e.n[state.fuel] != null &&
+      (state.dud || e.pr !== 'sospechosa') &&
+      (!state.prov || e.p === state.prov) &&
+      (!q || e.h.includes(q))
+    );
+  }
+
+  function render(fit) {
+    const all = ST.filter(e => e.n[state.fuel] != null && e.pr !== 'sospechosa').map(e => e.n[state.fuel]).sort((a, b) => a - b);
+    scale = { lo: all[Math.floor(all.length * .05)] || 0, hi: all[Math.floor(all.length * .95)] || 1 };
+    $('#lo').textContent = money(scale.lo);
+    $('#hi').textContent = money(scale.hi);
+    const vs = visible();
+    markers = new Map();
+    cluster.clearLayers();
+    cluster.addLayers(vs.map(mk));
+    if (fit && vs.length) {
+      map.fitBounds(L.latLngBounds(vs.map(e => [e.la, e.lo])).pad(.1), { maxZoom: 13 });
+    }
+    state.limit = 60;
+    list();
+  }
+
+  function list() {
+    const b = map.getBounds(), f = state.fuel;
+    const vs = visible().filter(e => b.contains([e.la, e.lo]));
+    if (state.pos) vs.forEach(e => { e.d_ = km(state.pos[0], state.pos[1], e.la, e.lo); });
+    vs.sort((a, c) => {
+      if (state.sort === 'dist' && state.pos) {
+        return (a.d_ - c.d_) || (a.n[f] - c.n[f]);
+      }
+      return (a.n[f] - c.n[f]) || ((a.d_ || 0) - (c.d_ || 0));
+    });
+
+    const pr = vs.map(e => e.n[f]);
+    const sortedPr = [...pr].sort((a, b) => a - b);
+    const medVal = sortedPr.length ? sortedPr[Math.floor(sortedPr.length / 2)] : null;
+    $('#st0').textContent = sortedPr.length ? money(sortedPr[0]) : '–';
+    $('#st1').textContent = medVal ? money(medVal) : '–';
+    $('#st2').textContent = sortedPr.length ? money(sortedPr[sortedPr.length - 1]) : '–';
+    $('#vis-count').textContent = `${vs.length} ${vs.length === 1 ? 'estación' : 'estaciones'} en esta vista`;
+    $('#mob-cnt').textContent = vs.length;
+
+    if (!vs.length) {
+      $('#list').innerHTML = '<div class="empty-list">No hay estaciones visibles en esta zona.<br>Alejá el zoom, cambiá de provincia o limpiá la búsqueda.</div>';
+      return;
+    }
+
+    const slice = vs.slice(0, state.limit);
+    const html = slice.map(e =>
+      `<button type="button" class="st-item${e.id === selectedId ? ' selected' : ''}" data-id="${esc(e.id)}">
+        <span class="nm"><i class="dot s${bucket(e.n[f])}"></i><span class="nm-txt">${esc(e.o)}</span></span>
+        <span class="pc">${money(e.n[f])}</span>
+        <span class="ad">${esc(e.d)}, ${esc(e.l)}</span>
+        <span class="ds">${state.pos && e.d_ != null ? e.d_.toFixed(1).replace('.', ',') + ' km' : esc(e.p)}</span>
+      </button>`
+    ).join('') + (vs.length > state.limit
+      ? `<div class="list-more"><button type="button" class="btn btn-sm" id="btn-more">Mostrar más (${vs.length - state.limit} restantes)</button></div>`
+      : '');
+    $('#list').innerHTML = html;
+  }
+
+  function showStation(id) {
+    const e = ST.find(x => x.id === id);
+    const m = markers.get(id);
+    if (!e || !m) return;
+    selectedId = id;
+    if (isMobile()) {
+      setMobileView('map');
+      map.setView([e.la, e.lo], Math.max(map.getZoom(), 15));
+      openMobileSheet(e);
+    } else {
+      map.setView([e.la, e.lo], Math.max(map.getZoom(), 15));
+      cluster.zoomToShowLayer(m, () => m.fire('click'));
+    }
+  }
+
+  function error(t) {
+    const m = $('#msg');
+    m.textContent = t;
+    m.style.display = t ? 'block' : 'none';
+  }
+
+  /* ── Sync Search, Province, GPS, Sort ── */
+  function syncSearch(val) {
+    state.q = val;
+    $('#q').value = val;
+    $('#q-mob').value = val;
+    $('#q-clr').hidden = !val;
+    $('#q-mob-clr').hidden = !val;
+  }
+
+  let qt;
+  const onSearchInput = val => {
+    syncSearch(val);
+    clearTimeout(qt);
+    qt = setTimeout(() => render(true), 240);
+  };
+  $('#q').oninput = e => onSearchInput(e.target.value);
+  $('#q-mob').oninput = e => onSearchInput(e.target.value);
+  $('#q-clr').onclick = () => { syncSearch(''); render(true); };
+  $('#q-mob-clr').onclick = () => { syncSearch(''); render(true); };
+
+  const onProvChange = val => {
+    state.prov = val;
+    $('#prov').value = val;
+    $('#prov-mob').value = val;
+    render(true);
+  };
+  $('#prov').onchange = e => onProvChange(e.target.value);
+  $('#prov-mob').onchange = e => onProvChange(e.target.value);
+
+  const onDudChange = chk => {
+    state.dud = chk;
+    $('#dud').checked = chk;
+    $('#dud-mob').checked = chk;
+    render();
+  };
+  $('#dud').onchange = e => onDudChange(e.target.checked);
+  $('#dud-mob').onchange = e => onDudChange(e.target.checked);
+
+  $('#sort-pill').onclick = e => {
+    const b = e.target.closest('button[data-sort]');
+    if (!b) return;
+    state.sort = b.dataset.sort;
+    $('#sort-pill').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.sort === state.sort));
+    $('#sort-hint').textContent = state.sort === 'dist' ? 'Orden: más cercanas' : 'Orden: menor precio';
+    list();
+  };
+
+  $('#list').onclick = e => {
+    if (e.target.closest('#btn-more')) {
+      state.limit += 60;
+      list();
+      return;
+    }
+    const b = e.target.closest('.st-item');
+    if (b) showStation(b.dataset.id);
+  };
+
+  map.on('moveend', list);
+
+  let me;
+  const askLoc = () => { error(''); map.locate({ enableHighAccuracy: true, timeout: 10000 }); };
+  $('#loc').onclick = askLoc;
+  $('#loc-mob').onclick = askLoc;
+
+  map.on('locationfound', e => {
+    state.pos = [e.latlng.lat, e.latlng.lng];
+    me && me.remove();
+    me = L.circleMarker(e.latlng, { radius: 8, color: '#fff', weight: 3, fillColor: '#1747d6', fillOpacity: 1 }).addTo(map);
+    $('#loc').classList.add('active');
+    $('#loc-mob').classList.add('active');
+    $('#sort-pill').hidden = false;
+    map.setView(e.latlng, 13);
+  });
+
+  map.on('locationerror', () => {
+    error('No pudimos obtener tu ubicación. Habilitá el permiso desde el candado del navegador.');
+  });
+
+  /* ── Mobile View & Filter Controls ── */
+  function setMobileView(view) {
+    const isList = view === 'list';
+    document.body.classList.toggle('mobile-list', isList);
+    $('#sw-map').classList.toggle('on', !isList);
+    $('#sw-list').classList.toggle('on', isList);
+    $('#sw-map').setAttribute('aria-selected', String(!isList));
+    $('#sw-list').setAttribute('aria-selected', String(isList));
+    if (!isList) setTimeout(() => map.invalidateSize(), 50);
+  }
+  $('#sw-map').onclick = () => setMobileView('map');
+  $('#sw-list').onclick = () => setMobileView('list');
+
+  $('#mb-flt-btn').onclick = () => {
+    const open = $('#mb-flt-panel').classList.toggle('open');
+    $('#mb-flt-btn').setAttribute('aria-expanded', String(open));
+    $('#mb-flt-btn').classList.toggle('btn-primary', open);
+  };
+
+  /* ── Boot Data ── */
+  fetch('data.json?' + Date.now())
+    .then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(d => {
+      ST = d.estaciones;
+      FIN = (d.actualizado || d.vigencia || '').slice(0, 10);
+      VER = d.actualizado || d.vigencia || '';
+      ST.forEach(e => { e.h = norm([e.o, e.d, e.l, e.p].join(' ')); });
+
+      const sub = $('#sub'), wrap = $('#sub-wrap'), dot = $('#live-dot');
+      if (d.actualizado) {
+        const h = (Date.now() - new Date(d.actualizado)) / 36e5;
+        sub.textContent = fmtDateShort.format(new Date(d.actualizado));
+        if (h > 36) {
+          sub.textContent += ' (desactualizado)';
+          wrap.classList.add('warn');
+          dot.classList.add('warn');
+        }
+      } else {
+        sub.textContent = 'Vigente al ' + f2(d.vigencia);
+      }
+
+      const provOpts = [...new Set(ST.map(e => e.p))].filter(Boolean).sort((a, b) => a.localeCompare(b, 'es'))
+        .map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+      $('#prov').innerHTML += provOpts;
+      $('#prov-mob').innerHTML += provOpts;
+
+      if (!ST.some(e => e.pr === 'sospechosa')) {
+        $('#dud-wrap').hidden = true;
+        $('#dud-mob-wrap').hidden = true;
+      }
+
+      const qp = new URLSearchParams(location.search);
+      const qFuel = qp.get('f');
+      if (qFuel && FUEL_SHORT[qFuel]) {
+        state.fuel = qFuel;
+        const rad = $(`#f${qFuel}`); if (rad) rad.checked = true;
+        $('#seg-mob').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.k === qFuel));
+      }
+      const qProv = qp.get('prov');
+      if (qProv && ST.some(e => e.p === qProv)) {
+        state.prov = qProv;
+        $('#prov').value = qProv;
+        $('#prov-mob').value = qProv;
+      }
+
+      render(Boolean(state.prov));
+
+      const qId = qp.get('id');
+      if (qId && ST.some(e => e.id === qId)) {
+        setTimeout(() => showStation(qId), 120);
+      }
+    })
+    .catch(() => {
+      $('#sub').textContent = 'Error al cargar';
+      error('No se pudo leer data.json. Si abriste el archivo directo, ejecutá: python -m http.server');
+    });
+})();
 </script>
 </body>
 </html>
