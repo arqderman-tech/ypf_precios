@@ -20,6 +20,8 @@ concurrency:
 jobs:
   actualizar:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -41,17 +43,26 @@ jobs:
           git diff --staged --quiet || git commit -m "Precios $(TZ=America/Argentina/Buenos_Aires date +'%Y-%m-%d %H:%M')"
           git push
       - uses: actions/configure-pages@v5
+      - name: Limpiar artifacts github-pages previos
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" \
+          | python -c "
+          import json,sys,urllib.request,os
+          tok=os.environ['GH_TOKEN']
+          arts=[a for a in json.load(sys.stdin)['artifacts'] if a['name']=='github-pages']
+          for a in arts:
+              req=urllib.request.Request(a['url'],method='DELETE',
+                  headers={'Authorization':'Bearer '+tok,
+                           'Accept':'application/vnd.github+json'})
+              urllib.request.urlopen(req)
+              print('borrado',a['id'])
+          print(len(arts),'artifacts viejos eliminados')
+          "
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
-
-  deploy:
-    needs: actualizar
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
